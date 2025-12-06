@@ -1,9 +1,8 @@
-
 """Bootstrap Offcanvas (Drawer) component for side panels."""
 
 from typing import Any, Literal
 
-from fasthtml.common import Button, Div, H5
+from fasthtml.common import H5, Button, Div
 
 from ...core.base import merge_classes
 
@@ -87,7 +86,7 @@ def Drawer(
     Note:
         To trigger a drawer, use Bootstrap's data attributes:
         >>> Button("Open Menu", data_bs_toggle="offcanvas", data_bs_target="#sidebar")
-        
+
         Or use HTMX to load drawer content dynamically:
         >>> Button("Load Drawer", hx_get="/drawer-content", hx_target="#drawerContainer")
 
@@ -116,7 +115,7 @@ def Drawer(
         attrs["data_bs_scroll"] = "true"
 
     # Convert remaining kwargs (excluding drawer_id)
-    converted_kwargs = _convert_attrs({k: v for k, v in kwargs.items() if k != 'drawer_id'})
+    converted_kwargs = _convert_attrs({k: v for k, v in kwargs.items() if k != "drawer_id"})
     attrs.update(converted_kwargs)
 
     # Build drawer structure

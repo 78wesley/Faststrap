@@ -1,6 +1,7 @@
 """Tests for Button component."""
 
 from fasthtml.common import to_xml
+
 from faststrap.components.forms import Button
 
 

@@ -1,6 +1,7 @@
 """Tests for Alert component."""
 
 from fasthtml.common import to_xml
+
 from faststrap.components.feedback import Alert
 
 

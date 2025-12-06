@@ -1,9 +1,8 @@
 """Tests for Navbar component."""
 
-from fasthtml.common import A
-from fasthtml.common import to_xml
-from faststrap.components.navigation import Navbar
+from fasthtml.common import A, to_xml
 
+from faststrap.components.navigation import Navbar
 
 
 def test_navbar_basic():
@@ -139,7 +138,7 @@ def test_navbar_full_configuration():
         variant="dark",
         bg="primary",
         expand="lg",
-        sticky="top"
+        sticky="top",
     )
     html = to_xml(navbar)
 

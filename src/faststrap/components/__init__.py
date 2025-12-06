@@ -1,16 +1,15 @@
 """FastStrap components."""
 
 # Forms
-from .forms import Button, ButtonGroup, ButtonToolbar
-
 # Display
 from .display import Badge, Card
 
 # Feedback
-from .feedback import Alert, Toast, ToastContainer, Modal
+from .feedback import Alert, Modal, Toast, ToastContainer
+from .forms import Button, ButtonGroup, ButtonToolbar
 
 # Layout
-from .layout import Container, Row, Col
+from .layout import Col, Container, Row
 
 # Navigation
 from .navigation import Drawer, Navbar

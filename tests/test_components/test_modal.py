@@ -1,8 +1,9 @@
 """Tests for Modal component."""
 
-from faststrap.components.feedback import Modal
-from faststrap import Button
 from fasthtml.common import to_xml
+
+from faststrap import Button
+from faststrap.components.feedback import Modal
 
 
 def test_modal_basic():
@@ -29,11 +30,7 @@ def test_modal_with_title():
 
 def test_modal_with_footer():
     """Modal can have a footer."""
-    modal = Modal(
-        "Body",
-        modal_id="modal2",
-        footer=Button("Close", data_bs_dismiss="modal")
-    )
+    modal = Modal("Body", modal_id="modal2", footer=Button("Close", data_bs_dismiss="modal"))
     html = to_xml(modal)
 
     assert "modal-footer" in html
@@ -111,7 +108,7 @@ def test_modal_full_structure():
         title="Complete Modal",
         footer=Button("Save", variant="primary"),
         size="lg",
-        centered=True
+        centered=True,
     )
     html = to_xml(modal)
 

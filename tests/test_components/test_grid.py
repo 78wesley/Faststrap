@@ -1,7 +1,8 @@
 """Tests for Grid components (Container, Row, Col)."""
 
-from faststrap.components.layout import Col, Container, Row
 from fasthtml.common import to_xml
+
+from faststrap.components.layout import Col, Container, Row
 
 
 class TestContainer:

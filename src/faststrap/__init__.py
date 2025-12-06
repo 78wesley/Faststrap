@@ -8,23 +8,22 @@ __author__ = "FastStrap Contributors"
 __license__ = "MIT"
 
 # Core functionality
-from .core.assets import add_bootstrap, get_assets
-from .core.base import merge_classes
-
-# Forms
-from .components.forms import Button, ButtonGroup, ButtonToolbar
-
 # Display
 from .components.display import Badge, Card
 
 # Feedback
-from .components.feedback import Alert, Toast, ToastContainer, Modal
+from .components.feedback import Alert, Modal, Toast, ToastContainer
+
+# Forms
+from .components.forms import Button, ButtonGroup, ButtonToolbar
 
 # Layout
-from .components.layout import Container, Row, Col
+from .components.layout import Col, Container, Row
 
 # Navigation
 from .components.navigation import Drawer, Navbar
+from .core.assets import add_bootstrap, get_assets
+from .core.base import merge_classes
 
 # Utils
 from .utils.icons import Icon

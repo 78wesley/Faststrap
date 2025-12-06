@@ -1,6 +1,7 @@
 """Tests for Toast component."""
 
 from fasthtml.common import to_xml
+
 from faststrap.components.feedback import Toast, ToastContainer
 
 
@@ -90,10 +91,7 @@ def test_toast_custom_classes():
 
 def test_toast_container_basic():
     """ToastContainer renders correctly."""
-    container = ToastContainer(
-        Toast("Toast 1"),
-        Toast("Toast 2")
-    )
+    container = ToastContainer(Toast("Toast 1"), Toast("Toast 2"))
     html = to_xml(container)
 
     assert "toast-container" in html
@@ -121,8 +119,13 @@ def test_toast_container_positions():
         html = to_xml(container)
         assert "toast-container" in html
         # Should have position classes like "top-0", "start-0", etc.
-        assert ("top-0" in html or "bottom-0" in html or "start-0" in html or
-                "end-0" in html or "start-50" in html)
+        assert (
+            "top-0" in html
+            or "bottom-0" in html
+            or "start-0" in html
+            or "end-0" in html
+            or "start-50" in html
+        )
 
 
 def test_toast_data_attributes():

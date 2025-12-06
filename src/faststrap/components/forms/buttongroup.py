@@ -73,7 +73,7 @@ def ButtonGroup(
     Note:
         Button groups merge adjacent buttons and remove rounded corners
         on inner buttons for a seamless look.
-        
+
         For toolbar-style layouts, wrap multiple button groups:
         >>> Div(
         ...     ButtonGroup(Button("1"), Button("2")),

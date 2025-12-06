@@ -1,6 +1,7 @@
 """Tests for Card component."""
 
 from fasthtml.common import to_xml
+
 from faststrap.components.display import Card
 
 

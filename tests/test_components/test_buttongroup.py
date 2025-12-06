@@ -1,17 +1,14 @@
 """Tests for ButtonGroup component."""
 
 from fasthtml.common import to_xml
+
 from faststrap import Button
 from faststrap.components.forms import ButtonGroup, ButtonToolbar
 
 
 def test_buttongroup_basic():
     """ButtonGroup renders with buttons."""
-    group = ButtonGroup(
-        Button("One"),
-        Button("Two"),
-        Button("Three")
-    )
+    group = ButtonGroup(Button("One"), Button("Two"), Button("Three"))
     html = to_xml(group)
 
     assert "btn-group" in html
@@ -31,12 +28,7 @@ def test_buttongroup_sizes():
 
 def test_buttongroup_vertical():
     """ButtonGroup can be vertical."""
-    group = ButtonGroup(
-        Button("Top"),
-        Button("Middle"),
-        Button("Bottom"),
-        vertical=True
-    )
+    group = ButtonGroup(Button("Top"), Button("Middle"), Button("Bottom"), vertical=True)
     html = to_xml(group)
 
     assert "btn-group-vertical" in html
@@ -74,8 +66,7 @@ def test_buttongroup_data_attributes():
 def test_buttontoolbar_basic():
     """ButtonToolbar renders with groups."""
     toolbar = ButtonToolbar(
-        ButtonGroup(Button("1"), Button("2")),
-        ButtonGroup(Button("3"), Button("4"))
+        ButtonGroup(Button("1"), Button("2")), ButtonGroup(Button("3"), Button("4"))
     )
     html = to_xml(toolbar)
 
@@ -86,10 +77,7 @@ def test_buttontoolbar_basic():
 
 def test_buttontoolbar_custom_classes():
     """ButtonToolbar merges custom classes."""
-    toolbar = ButtonToolbar(
-        ButtonGroup(Button("Test")),
-        cls="custom-toolbar"
-    )
+    toolbar = ButtonToolbar(ButtonGroup(Button("Test")), cls="custom-toolbar")
     html = to_xml(toolbar)
 
     assert "btn-toolbar" in html
@@ -101,7 +89,7 @@ def test_buttongroup_with_variants():
     group = ButtonGroup(
         Button("Primary", variant="primary"),
         Button("Success", variant="success"),
-        Button("Danger", variant="danger")
+        Button("Danger", variant="danger"),
     )
     html = to_xml(group)
 

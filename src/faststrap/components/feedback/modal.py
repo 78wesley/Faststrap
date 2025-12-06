@@ -1,9 +1,8 @@
-
 """Bootstrap Modal component for dialog boxes."""
 
 from typing import Any, Literal
 
-from fasthtml.common import Button, Div, H5, Span
+from fasthtml.common import H5, Button, Div
 
 from ...core.base import merge_classes
 
@@ -92,7 +91,7 @@ def Modal(
     Note:
         To trigger a modal, use Bootstrap's data attributes:
         >>> Button("Open Modal", data_bs_toggle="modal", data_bs_target="#deleteModal")
-        
+
         Or use HTMX to load modal content dynamically:
         >>> Button("Load Modal", hx_get="/modal-content", hx_target="#modalContainer")
 
@@ -135,7 +134,7 @@ def Modal(
         attrs["data_bs_keyboard"] = "false"
 
     # Convert remaining kwargs (excluding modal_id)
-    converted_kwargs = _convert_attrs({k: v for k, v in kwargs.items() if k != 'modal_id'})
+    converted_kwargs = _convert_attrs({k: v for k, v in kwargs.items() if k != "modal_id"})
     attrs.update(converted_kwargs)
 
     # Build modal structure
@@ -168,7 +167,7 @@ def Modal(
     modal_content = Div(*content_parts, cls="modal-content")
     modal_dialog = Div(modal_content, cls=" ".join(dialog_classes))
 
-        # Assemble modal
+    # Assemble modal
     modal_content = Div(*content_parts, cls="modal-content")
     modal_dialog = Div(modal_content, cls=" ".join(dialog_classes))
 

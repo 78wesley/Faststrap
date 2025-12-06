@@ -86,7 +86,7 @@ def Navbar(
     Note:
         For complex navbars with dropdowns, forms, or buttons,
         wrap items in appropriate containers:
-        
+
         >>> Navbar(
         ...     Div(  # Nav items
         ...         A("Link 1", href="/", cls="nav-link"),
@@ -138,7 +138,7 @@ def Navbar(
     # Wrap in container if requested
     if container:
         container_cls = "container" if container is True else f"container-{container}"
-        
+
         # Build container content
         container_parts = []
 
@@ -153,8 +153,9 @@ def Navbar(
             if "id" not in kwargs:
                 # Generate a unique ID for the collapse target
                 import random
+
                 toggler_id = f"navbar{random.randint(1000, 9999)}"
-            
+
             toggler = Button(
                 Span(cls="navbar-toggler-icon"),
                 cls="navbar-toggler",
@@ -179,14 +180,15 @@ def Navbar(
         # No container wrapper
         if brand:
             parts.append(A(brand, cls="navbar-brand", href=brand_href))
-        
+
         if expand:
             # Still need collapse for mobile
             toggler_id = kwargs.get("id", "navbarContent")
             if "id" not in kwargs:
                 import random
+
                 toggler_id = f"navbar{random.randint(1000, 9999)}"
-            
+
             toggler = Button(
                 Span(cls="navbar-toggler-icon"),
                 cls="navbar-toggler",
@@ -198,7 +200,7 @@ def Navbar(
                 aria_label="Toggle navigation",
             )
             parts.append(toggler)
-            
+
             collapse = Div(*children, cls="collapse navbar-collapse", id=toggler_id)
             parts.append(collapse)
         else:

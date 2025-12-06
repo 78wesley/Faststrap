@@ -81,11 +81,11 @@ def Toast(
 
     Note:
         Toasts require Bootstrap's JavaScript to work.
-        
+
         To show a toast programmatically:
         - Add it to the page (hidden by default)
         - Use Bootstrap's Toast API: `toast.show()` via JavaScript
-        
+
         Or use HTMX to dynamically add toasts:
         >>> Button("Show Toast", hx_get="/toast", hx_target="#toast-container")
 

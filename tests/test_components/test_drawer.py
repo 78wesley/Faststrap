@@ -1,7 +1,8 @@
 """Tests for Drawer (Offcanvas) component."""
 
-from faststrap.components.navigation import Drawer
 from fasthtml.common import to_xml
+
+from faststrap.components.navigation import Drawer
 
 
 def test_drawer_basic():
@@ -103,7 +104,7 @@ def test_drawer_full_configuration():
         title="Full Drawer",
         placement="end",
         backdrop=False,
-        scroll=True
+        scroll=True,
     )
     html = to_xml(drawer)
 

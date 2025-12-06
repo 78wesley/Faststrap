@@ -1,6 +1,7 @@
 """Tests for Badge component."""
 
 from fasthtml.common import to_xml
+
 from faststrap.components.display import Badge
 
 
