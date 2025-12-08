@@ -5,21 +5,9 @@ from typing import Any, Literal
 from fasthtml.common import Div
 
 from ...core.base import merge_classes
+from ...utils.attrs import convert_attrs
 
 SizeType = Literal["sm", "lg"]
-
-
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert Python kwargs to HTML attributes (hx_get → hx-get)."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
 
 
 def ButtonGroup(
@@ -102,7 +90,7 @@ def ButtonGroup(
     }
 
     # Convert remaining kwargs
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*buttons, **attrs)
 
@@ -150,6 +138,6 @@ def ButtonToolbar(
     }
 
     # Convert remaining kwargs
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*groups, **attrs)

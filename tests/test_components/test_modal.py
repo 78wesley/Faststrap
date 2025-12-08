@@ -147,6 +147,3 @@ def test_modal_multiple_children():
     assert "First." in html
     assert "Second." in html
     assert "Third." in html
-
-
-# Fix all test files at once

@@ -5,23 +5,12 @@ from typing import Any, Literal
 from fasthtml.common import H5, Button, Div
 
 from ...core.base import merge_classes
+from ...utils.attrs import convert_attrs
 
 PlacementType = Literal["start", "end", "top", "bottom"]
 
 
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert Python kwargs to HTML attributes (hx_get → hx-get)."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
-
-
+# @register(category="feedback", requires_js=True)
 def Drawer(
     *children: Any,
     drawer_id: str,  # Using drawer_id to avoid conflict
@@ -29,6 +18,7 @@ def Drawer(
     placement: PlacementType = "start",
     backdrop: bool = True,
     scroll: bool = False,
+    dark: bool = False,
     **kwargs: Any,
 ) -> Div:
     """Bootstrap Offcanvas (Drawer) component for side panels and menus.
@@ -96,6 +86,9 @@ def Drawer(
     # Build offcanvas classes
     classes = ["offcanvas", f"offcanvas-{placement}"]
 
+    if dark:  # ← Bootstrap 5.3+ dark variant
+        classes.append("offcanvas-dark")
+
     # Merge with user classes
     user_cls = kwargs.pop("cls", "")
     all_classes = merge_classes(" ".join(classes), user_cls)
@@ -115,7 +108,7 @@ def Drawer(
         attrs["data_bs_scroll"] = "true"
 
     # Convert remaining kwargs (excluding drawer_id)
-    converted_kwargs = _convert_attrs({k: v for k, v in kwargs.items() if k != "drawer_id"})
+    converted_kwargs = convert_attrs({k: v for k, v in kwargs.items() if k != "drawer_id"})
     attrs.update(converted_kwargs)
 
     # Build drawer structure
@@ -139,7 +132,5 @@ def Drawer(
     body = Div(*children, cls="offcanvas-body")
     parts.append(body)
 
-    # # Create the drawer with correct attrs including id
-    # final_attrs = {"id": drawer_id, **attrs}
-    # # return Div(*parts, **final_attrs)
+    # Create the drawer with correct attrs including id
     return Div(*parts, id=drawer_id, **attrs)

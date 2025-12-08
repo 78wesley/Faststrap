@@ -6,26 +6,12 @@ from fasthtml.common import Button as FTButton
 from fasthtml.common import I, Span
 
 from ...core.base import merge_classes
+from ...utils.attrs import convert_attrs
 
 VariantType = Literal[
     "primary", "secondary", "success", "danger", "warning", "info", "light", "dark", "link"
 ]
 SizeType = Literal["sm", "lg"]
-
-
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert hx_get to hx-get, data_value to data-value."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            new_key = k.replace("_", "-")
-            converted[new_key] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            # Convert other underscores to hyphens for HTML attributes
-            converted[k.replace("_", "-")] = v
-    return converted
 
 
 def Button(
@@ -85,7 +71,7 @@ def Button(
         attrs["disabled"] = True
 
     # Convert remaining kwargs (including hx_*, data_*, etc.)
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     # Build content
     content = list(children)

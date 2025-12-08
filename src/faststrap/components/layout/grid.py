@@ -5,22 +5,10 @@ from typing import Any, Literal
 from fasthtml.common import Div
 
 from ...core.base import merge_classes
+from ...utils.attrs import convert_attrs
 
 BreakpointType = Literal["sm", "md", "lg", "xl", "xxl"]
 ContainerType = Literal["fluid", "sm", "md", "lg", "xl", "xxl"]
-
-
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert Python kwargs to HTML attributes (hx_get → hx-get)."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
 
 
 def Container(
@@ -68,7 +56,7 @@ def Container(
 
     # Build attributes
     attrs: dict[str, Any] = {"cls": all_classes}
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*children, **attrs)
 
@@ -134,7 +122,7 @@ def Row(
 
     # Build attributes
     attrs: dict[str, Any] = {"cls": all_classes}
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*children, **attrs)
 
@@ -233,6 +221,6 @@ def Col(
 
     # Build attributes
     attrs: dict[str, Any] = {"cls": all_classes}
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*children, **attrs)

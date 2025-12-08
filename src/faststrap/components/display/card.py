@@ -5,19 +5,7 @@ from typing import Any
 from fasthtml.common import H5, Div, Img
 
 from ...core.base import merge_classes
-
-
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert Python kwargs to HTML attributes (hx_get → hx-get)."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
+from ...utils.attrs import convert_attrs
 
 
 def Card(
@@ -98,7 +86,7 @@ def Card(
 
     # Build attributes
     attrs: dict[str, Any] = {"cls": all_classes}
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     # Build card structure
     parts = []

@@ -41,7 +41,49 @@ def MyComponent(
     classes: list[str] = []     # ← Lowercase list
     return Div(*children, **attrs)
 ```
+## Common Component Patterns
 
+### Pattern 1: Simple Single-Element Components
+**Examples**: Badge, Icon, Spinner
+```python
+def Badge(*children: Any, variant: VariantType = "primary", **kwargs: Any) -> Span:
+    classes = ["badge", f"text-bg-{variant}"]
+    cls = merge_classes(" ".join(classes), kwargs.pop("cls", ""))
+    return Span(*children, cls=cls, **kwargs)
+```
+
+### Pattern 2: Multi-Part Components
+**Examples**: Card, Modal, Navbar
+```python
+def Card(
+    *children: Any,
+    header: Any | None = None,
+    footer: Any | None = None,
+    **kwargs: Any
+) -> Div:
+    parts = []
+    if header:
+        parts.append(Div(header, cls="card-header"))
+    parts.append(Div(*children, cls="card-body"))
+    if footer:
+        parts.append(Div(footer, cls="card-footer"))
+    return Div(*parts, cls="card", **kwargs)
+```
+
+### Pattern 3: Components with JS Behavior
+**Examples**: Modal, Drawer, Toast
+```python
+@register(category="feedback", requires_js=True)
+def Modal(*children: Any, modal_id: str, **kwargs: Any) -> Div:
+    # Requires data-bs-* attributes for Bootstrap JS
+    attrs = {
+        "id": modal_id,
+        "data_bs_backdrop": "static",  # JS configuration
+        "aria_hidden": "true",
+        "tabindex": "-1"
+    }
+    return Div(*parts, **attrs)
+```
 ---
 
 ## Component Checklist
@@ -167,8 +209,8 @@ class ComponentNameBuilder(ComponentBuilder):
     
     def __init__(self, *children: Any, **kwargs: Any):
         super().__init__(*children, **kwargs)
-        self.header: Optional[Any] = None
-        self.footer: Optional[Any] = None
+        self.header: Any | None = None,
+        self.footer: Any | None = None,
         self.variant: str = kwargs.get("variant", "primary")
     
     def with_header(self, header: Any) -> "ComponentNameBuilder":
@@ -218,11 +260,10 @@ class ComponentNameBuilder(ComponentBuilder):
         
         return Div(*parts, cls=classes, **self.attrs)
 
-
 def ComponentName(
     *children: Any,
-    header: Optional[Any] = None,
-    footer: Optional[Any] = None,
+    header: Any | None = None,
+    footer: Any | None = None,
     variant: str = "primary",
     **kwargs: Any
 ) -> Union[Div, ComponentNameBuilder]:
@@ -322,7 +363,7 @@ def Button(..., loading: bool = False, ...):
 
 ### 6. Icons (Bootstrap Icons)
 ```python
-def Button(..., icon: Optional[str] = None, ...):
+def Button(..., icon: str | None = None,, ...):
     content = list(children)
     if icon:
         content.insert(0, I(cls=f"bi bi-{icon} me-2"))
@@ -350,7 +391,7 @@ Create `tests/test_components/test_{component_name}.py`:
 """Tests for ComponentName component."""
 
 import pytest
-from fasthtml.common import Div
+from fasthtml.common import Div, to_xml
 from faststrap.components.category import ComponentName
 
 
@@ -360,7 +401,7 @@ class TestComponentBasic:
     def test_renders_correctly(self):
         """Component renders with correct HTML structure."""
         component = ComponentName("Test content")
-        html = str(component)
+        html = to_xml(component)
         
         assert isinstance(component, Div)
         assert "Test content" in html
@@ -369,7 +410,7 @@ class TestComponentBasic:
     def test_default_variant(self):
         """Component uses default variant."""
         component = ComponentName("Test")
-        html = str(component)
+        html = to_xml(component)
         assert "component-primary" in html
 
 
@@ -383,7 +424,7 @@ class TestComponentVariants:
     def test_variant(self, variant):
         """All variants render correctly."""
         component = ComponentName("Test", variant=variant)
-        html = str(component)
+        html = to_xml(component)
         assert f"component-{variant}" in html
 
 
@@ -392,16 +433,16 @@ class TestComponentSizes:
     
     def test_small_size(self):
         component = ComponentName("Test", size="sm")
-        assert "component-sm" in str(component)
+        assert "component-sm" in to_xml(component)
     
     def test_medium_size_no_class(self):
         """Medium is default, shouldn't add class."""
         component = ComponentName("Test", size="md")
-        assert "component-md" not in str(component)
+        assert "component-md" not in to_xml(component)
     
     def test_large_size(self):
         component = ComponentName("Test", size="lg")
-        assert "component-lg" in str(component)
+        assert "component-lg" in to_xml(component)
 
 
 class TestComponentCustomization:
@@ -410,7 +451,7 @@ class TestComponentCustomization:
     def test_custom_classes(self):
         """User classes are merged with Bootstrap classes."""
         component = ComponentName("Test", cls="mt-3 shadow")
-        html = str(component)
+        html = to_xml(component)
         assert "mt-3" in html
         assert "shadow" in html
         assert "component-base" in html
@@ -418,12 +459,12 @@ class TestComponentCustomization:
     def test_custom_id(self):
         """Custom ID is applied."""
         component = ComponentName("Test", id="my-component")
-        assert 'id="my-component"' in str(component)
+        assert 'id="my-component"' in to_xml(component)
     
     def test_data_attributes(self):
         """Data attributes work correctly."""
         component = ComponentName("Test", data_value="123")
-        assert 'data-value="123"' in str(component)
+        assert 'data-value="123"' in to_xml(component)
 
 
 class TestComponentHTMX:
@@ -431,7 +472,7 @@ class TestComponentHTMX:
     
     def test_hx_get(self):
         component = ComponentName("Load", hx_get="/api")
-        assert 'hx-get="/api"' in str(component)
+        assert 'hx-get="/api"' in to_xml(component)
     
     def test_hx_post_with_target(self):
         component = ComponentName(
@@ -439,7 +480,7 @@ class TestComponentHTMX:
             hx_post="/save",
             hx_target="#result"
         )
-        html = str(component)
+        html = to_xml(component)
         assert 'hx-post="/save"' in html
         assert 'hx-target="#result"' in html
 
@@ -449,7 +490,7 @@ class TestComponentAccessibility:
     
     def test_disabled_has_aria(self):
         component = ComponentName("Test", disabled=True)
-        html = str(component)
+        html = to_xml(component)
         assert "disabled" in html
         assert 'aria-disabled="true"' in html
 
@@ -465,7 +506,7 @@ class TestComponentEdgeCases:
     def test_multiple_children(self):
         """Component accepts multiple children."""
         component = ComponentName("First", "Second", "Third")
-        html = str(component)
+        html = to_xml(component)
         assert "First" in html
         assert "Second" in html
         assert "Third" in html
@@ -474,7 +515,7 @@ class TestComponentEdgeCases:
         """Components can be nested."""
         inner = ComponentName("Inner")
         outer = ComponentName(inner, variant="secondary")
-        html = str(outer)
+        html = to_xml(outer)
         assert "Inner" in html
         assert "component-secondary" in html
 
@@ -490,7 +531,7 @@ class TestComponentFluentAPI:
             .with_footer("Footer") \
             .build()
         
-        html = str(component)
+        html = to_xml(component)
         assert "Title" in html
         assert "Body" in html
         assert "Footer" in html
@@ -504,10 +545,10 @@ class TestComponentFluentAPI:
         kwargs = ComponentName("Body", header="Title")
         
         # Should produce equivalent HTML
-        assert "Title" in str(fluent)
-        assert "Body" in str(fluent)
-        assert "Title" in str(kwargs)
-        assert "Body" in str(kwargs)
+        assert "Title" in to_xml(fluent)
+        assert "Body" in to_xml(fluent)
+        assert "Title" in to_xml(kwargs)
+        assert "Body" in to_xml(kwargs)
 ```
 
 ---
@@ -636,8 +677,64 @@ Note:
    # Right - returns built Div
    return ComponentNameBuilder(*children).build()
    ```
+## Performance Guidelines
 
----
+### Minimize Attribute Copying
+```python
+# ❌ Bad - copies dict twice
+attrs = kwargs.copy()
+attrs.update({"cls": cls})
+
+# ✅ Good - single dict operation
+attrs = {"cls": cls, **kwargs}
+```
+
+### Efficient Class Merging
+```python
+# ❌ Bad - multiple string operations
+cls = f"{base_cls} {user_cls}".strip()
+
+# ✅ Good - use merge_classes utility
+cls = merge_classes(base_cls, user_cls)
+```
+
+### Lazy Evaluation for Optional Parts
+```python
+# ✅ Good - only build header if needed
+parts = []
+if header:
+    parts.append(Div(header, cls="card-header"))
+```
+## Troubleshooting
+
+### Component not rendering?
+1. Check if Bootstrap assets are loaded: `add_bootstrap(app)`
+2. Verify FastHTML version: `pip show fasthtml`
+3. Check browser console for JS errors
+
+### Classes not applying?
+```python
+# Make sure you're merging, not replacing
+cls = merge_classes("btn", kwargs.pop("cls", ""))  # ✅
+cls = "btn"  # ❌ Overwrites user classes
+```
+
+### HTMX attributes not working?
+```python
+# Use underscores in Python
+Button("Load", hx_get="/api")  # ✅
+Button("Load", **{"hx-get": "/api"})  # ✅ Also works
+
+# Will be converted to hyphens in HTML
+```
+
+### Bootstrap JS not working?
+1. Check if component requires JS: Look for `@register(requires_js=True)`
+2. Ensure Bootstrap bundle is loaded (not just CSS)
+3. Check if using `use_cdn=True` or local files are present
+```
+```
+
 
 ## Component Priority List
 

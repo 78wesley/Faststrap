@@ -5,23 +5,12 @@ from typing import Any, Literal
 from fasthtml.common import H5, Button, Div
 
 from ...core.base import merge_classes
+from ...utils.attrs import convert_attrs
 
 SizeType = Literal["sm", "lg", "xl"]
 
 
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert Python kwargs to HTML attributes (hx_get → hx-get)."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
-
-
+# @register(category="feedback", requires_js=True)
 def Modal(
     *children: Any,
     modal_id: str,  # Using modal_id to avoid conflict
@@ -32,6 +21,7 @@ def Modal(
     scrollable: bool = False,
     fullscreen: bool | Literal["sm-down", "md-down", "lg-down", "xl-down", "xxl-down"] = False,
     static_backdrop: bool = False,
+    fade: bool = True,
     **kwargs: Any,
 ) -> Div:
     """Bootstrap Modal component for dialog boxes and overlays.
@@ -116,8 +106,11 @@ def Modal(
         else:
             dialog_classes.append(f"modal-fullscreen-{fullscreen}")
 
-    # Build modal attributes (WITHOUT id - we'll add it later)
-    modal_classes = ["modal", "fade"]
+    # Build modal attributes
+    modal_classes = ["modal"]
+    if fade:
+        modal_classes.append("fade")
+
     user_cls = kwargs.pop("cls", "")
     all_modal_classes = merge_classes(" ".join(modal_classes), user_cls)
 
@@ -134,7 +127,7 @@ def Modal(
         attrs["data_bs_keyboard"] = "false"
 
     # Convert remaining kwargs (excluding modal_id)
-    converted_kwargs = _convert_attrs({k: v for k, v in kwargs.items() if k != "modal_id"})
+    converted_kwargs = convert_attrs({k: v for k, v in kwargs.items() if k != "modal_id"})
     attrs.update(converted_kwargs)
 
     # Build modal structure
@@ -171,7 +164,4 @@ def Modal(
     modal_content = Div(*content_parts, cls="modal-content")
     modal_dialog = Div(modal_content, cls=" ".join(dialog_classes))
 
-    # # FINAL CORRECT WAY — id goes in attrs, not after
-    # final_attrs = {"id": modal_id, **attrs}
-    # # return Div(modal_dialog, **final_attrs)
     return Div(modal_dialog, id=modal_id, **attrs)

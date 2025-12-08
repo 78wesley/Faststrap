@@ -27,7 +27,7 @@ from faststrap import (
 )
 
 app = FastHTML()
-add_bootstrap(app, theme="light")
+add_bootstrap(app, theme="dark", use_cdn=True)
 
 
 @app.route("/")
@@ -62,9 +62,10 @@ def home():
             position="top-end"
         ),
         
+        
         # Main content
         Container(
-            H1("FastStrap Phase 1 + 2 Complete! 🎉", cls="my-5"),
+            H1("FastStrap Phase 1 + 2 Complete!", cls="my-5"),
             P("All 12 components from Phase 1 and Phase 2 are working!", cls="lead mb-5"),
             
             # Modal trigger
