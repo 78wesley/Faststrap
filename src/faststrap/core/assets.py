@@ -1,5 +1,7 @@
 """Bootstrap asset injection and theme management."""
 
+from contextlib import ExitStack
+from importlib.resources import files
 from os import environ
 from typing import Any
 
@@ -119,9 +121,16 @@ def add_bootstrap(
     # Mount static files (only when using local assets) — using Starlette's explicit mount
     if not use_cdn and mount_static:
         try:
-            # Check if already mounted to avoid duplicates
-            if not any(route.path == "/static" for route in app.routes):
-                app.mount("/static", StaticFiles(directory="static"), name="static")
+            local_static_dir = files("faststrap").joinpath("static")
+            with ExitStack() as stack:
+                # This line gets a standard Path object, handling zipped resources
+                # The ExitStack ensures the temporary resource path is cleaned up.
+                path_obj = stack.enter_context(local_static_dir.as_file())  # type: ignore[attr-defined]
+
+                # Check if already mounted to avoid duplicates
+                if not any(route.path == "/static" for route in app.routes):
+                    # MyPy now accepts 'path_obj' because it is a standard pathlib.Path
+                    app.mount("/static", StaticFiles(directory=path_obj), name="static")
         except Exception:
             pass  # Already mounted or dir missing — safe to ignore
 
