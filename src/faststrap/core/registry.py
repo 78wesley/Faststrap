@@ -1,13 +1,13 @@
-# src/faststrap/core/registry.py
 """Component registry for FastStrap."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import Any
+from typing import Any, Callable, TypeVar
 
 # Global registry for component metadata
 _component_registry: dict[str, dict[str, Any]] = {}
+
+F = TypeVar('F', bound=Callable[..., Any])
 
 
 def register(
@@ -15,23 +15,22 @@ def register(
     category: str | None = None,
     bootstrap_version: str = "5.3.3",
     requires_js: bool = False,
-):
+) -> Callable[[F], F]:
     """Decorator to register component metadata.
-
+    
     Args:
         name: Component name (defaults to function name)
         category: Component category (layout, display, etc.)
         bootstrap_version: Min Bootstrap version required
         requires_js: Whether component needs Bootstrap JS
-
+    
     Example:
         >>> @register(category="feedback", requires_js=True)
         >>> def Modal(...): ...
     """
-
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def decorator(func: F) -> F:
         component_name = name or func.__name__
-
+        
         _component_registry[component_name] = {
             "func": func,
             "category": category,
@@ -40,13 +39,13 @@ def register(
             "module": func.__module__,
             "doc": func.__doc__,
         }
-
-        # Mark function as registered
-        func.__faststrap_registered__ = True
-        func.__faststrap_metadata__ = _component_registry[component_name]
-
+        
+        # Mark function as registered (use setattr to avoid mypy complaints)
+        setattr(func, "__faststrap_registered__", True)
+        setattr(func, "__faststrap_metadata__", _component_registry[component_name])
+        
         return func
-
+    
     return decorator
 
 
@@ -62,45 +61,50 @@ def get_component(name: str) -> Callable[..., Any] | None:
 
 def list_components(category: str | None = None) -> list[str]:
     """List all registered components, optionally filtered by category.
-
+    
     Args:
         category: Filter by category (layout, display, feedback, etc.)
-
+    
     Returns:
         List of component names
-
+    
     Example:
         >>> list_components(category="feedback")
         ['Alert', 'Toast', 'Modal', 'Spinner']
     """
     if category is None:
         return list(_component_registry.keys())
-
-    return [name for name, meta in _component_registry.items() if meta.get("category") == category]
+    
+    return [
+        name for name, meta in _component_registry.items()
+        if meta.get("category") == category
+    ]
 
 
 def autodiscover() -> None:
     """Auto-discover and register all components.
-
+    
     This is called automatically when importing faststrap.
     Can be called manually to refresh registry after dynamic imports.
     """
     import importlib
     import pkgutil
-
+    
     try:
         from faststrap import components
-
+        
         # Recursively import all component modules
-        for module_name in pkgutil.walk_packages(
-            components.__path__, prefix="faststrap.components."
+        for modname in pkgutil.walk_packages(
+            components.__path__, 
+            prefix="faststrap.components."
         ):
             try:
-                importlib.import_module(module_name)
+                importlib.import_module(modname)
             except ImportError as e:
                 # Log but don't fail - some components might have optional deps
-                print(f"Warning: Could not import {module_name}: {e}")
-
+                import warnings
+                warnings.warn(f"Could not import {modname}: {e}", ImportWarning)
+    
     except ImportError:
         pass  # Components not yet installed
 

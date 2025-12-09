@@ -43,22 +43,10 @@ from typing import Any, Literal
 from fasthtml.common import Div  # Or appropriate FT type
 
 from ...core.base import merge_classes
+from ...utils.attrs import convert_attrs
 
 # Type aliases
 VariantType = Literal["primary", "secondary", "success", "danger", "warning", "info", "light", "dark"]
-
-
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert hx_get → hx-get, data_id → data-id, aria_label → aria-label."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
 
 
 def ComponentName(
@@ -98,7 +86,7 @@ def ComponentName(
 
     # Build attributes
     attrs: dict[str, Any] = {"cls": all_classes}
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*children, **attrs)
 ```

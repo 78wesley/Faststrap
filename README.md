@@ -370,7 +370,7 @@ See [ROADMAP.md](ROADMAP.md) for complete timeline.
 - 📖 **Documentation**: [GitHub README](https://github.com/Evayoung/Faststrap#readme)
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Evayoung/Faststrap/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/Evayoung/Faststrap/discussions)
-- 🎮 **Discord**: Join [FastHTML Discord](https://discord.gg/fasthtml)
+- 🎮 **Discord**: Join [FastHTML Discord](https://discord.gg/qcXvcxMhdP)
 
 ---
 

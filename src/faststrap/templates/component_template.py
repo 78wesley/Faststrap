@@ -1,28 +1,35 @@
-"""Bootstrap [ComponentName] for [purpose]."""
+"""Bootstrap [ComponentName] for [purpose].
+
+This is a TEMPLATE file. Copy this to components/category/your_component.py
+and customize it for your component.
+"""
 
 from typing import Any, Literal
 
 from fasthtml.common import Div  # Or appropriate FT type
 
-from ...core.base import merge_classes
+# NOTE: When copying this template, adjust the import path:
+# from ...core.base import merge_classes
+# from ...utils.attrs import convert_attrs
+
+# For template validation only (remove when using):
+try:
+    from faststrap.core.base import merge_classes
+    from faststrap.utils.attrs import convert_attrs
+except ImportError:
+    # Fallback for when template is used standalone
+    def merge_classes(*args: str | None) -> str:  # type: ignore
+        """Placeholder - use real implementation."""
+        return " ".join(str(c) for c in args if c)
+    
+    def convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:  # type: ignore
+        """Placeholder - use real implementation."""
+        return kwargs
 
 # Type aliases
 VariantType = Literal[
     "primary", "secondary", "success", "danger", "warning", "info", "light", "dark"
 ]
-
-
-def _convert_attrs(kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Convert hx_get → hx-get, data_id → data-id, aria_label → aria-label."""
-    converted = {}
-    for k, v in kwargs.items():
-        if k.startswith("hx_") or k.startswith("data_") or k.startswith("aria_"):
-            converted[k.replace("_", "-")] = v
-        elif k == "cls":
-            converted[k] = v
-        else:
-            converted[k.replace("_", "-")] = v
-    return converted
 
 
 def ComponentName(
@@ -62,6 +69,6 @@ def ComponentName(
 
     # Build attributes
     attrs: dict[str, Any] = {"cls": all_classes}
-    attrs.update(_convert_attrs(kwargs))
+    attrs.update(convert_attrs(kwargs))
 
     return Div(*children, **attrs)

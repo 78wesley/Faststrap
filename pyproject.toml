@@ -107,9 +107,12 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 files = ["src/faststrap"]
-exclude = ["tests/", "examples/"]
+exclude = [
+    "src/faststrap/templates",  # Exclude template files
+    "tests/",
+    "examples/",
+]
 
-# FastHTML and Starlette don't have type stubs
 [[tool.mypy.overrides]]
 module = ["fasthtml.*", "starlette.*"]
 ignore_missing_imports = true
