@@ -20,7 +20,7 @@ def StatCard(
     inverse: bool = False,
     icon_bg: str | None = None,
     **kwargs: Any,
-) -> Card:
+) -> Div:
     """Bootstrap Statistic Card component.
 
     Display a metric with optional icon and trend.

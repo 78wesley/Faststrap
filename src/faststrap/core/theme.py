@@ -487,7 +487,7 @@ def reset_component_defaults(component: str | None = None) -> None:
     """
     global _COMPONENT_DEFAULTS
     
-    original = {
+    original: dict[str, dict[str, Any]] = {
         "Alert": {"variant": "primary", "dismissible": False},
         "Badge": {"variant": "primary", "pill": False},
         "Breadcrumb": {},

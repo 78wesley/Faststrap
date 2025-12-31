@@ -22,7 +22,7 @@ def ConfirmDialog(
     hx_target: str | None = None, 
     hx_swap: str | None = None,
     **kwargs: Any,
-) -> Modal:
+) -> Div:
     """Bootstrap Confirmation Dialog (pre-configured Modal).
 
     A modal designed for confirming destructive actions.
@@ -52,15 +52,12 @@ def ConfirmDialog(
         ... )
     """
     # Build confirm button with HTMX attributes
-    btn_attrs = {
+    btn_attrs: dict[str, Any] = {
         "variant": variant,
-        "data-bs-dismiss": "modal",
+        "data_bs_dismiss": "modal",
     }
     
     if hx_confirm_url:
-        attr_name = f"hx_{hx_confirm_method}".replace("delete", "delete_") # Handle hx_delete conflict if using convert_attrs logic (usually hx_delete_ is pythonic for hx-delete)
-        # Actually FastStrap's Button handles 'hx_delete' argument -> 'hx-delete'
-        
         # We pass hx arguments directly to Button
         if hx_confirm_method == "get":
             btn_attrs["hx_get"] = hx_confirm_url
