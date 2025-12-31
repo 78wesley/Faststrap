@@ -47,7 +47,6 @@ plugins:
           options:
             show_root_heading: true
             show_source: true
-            import_identifier: true
 
 markdown_extensions:
   - admonition
