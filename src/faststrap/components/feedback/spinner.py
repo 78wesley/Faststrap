@@ -33,13 +33,9 @@ def Spinner(
     """
     # Resolve API defaults
     cfg = resolve_defaults(
-        "Spinner",
-        variant=variant,
-        size=size,
-        spinner_type=spinner_type,
-        label=label
+        "Spinner", variant=variant, size=size, spinner_type=spinner_type, label=label
     )
-    
+
     c_variant = cfg.get("variant", "primary")
     c_size = cfg.get("size")
     c_type = cfg.get("spinner_type", "border")

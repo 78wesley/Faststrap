@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from fasthtml.common import Div, H4, P
+from fasthtml.common import H4, Div, P
 
 from ...core.base import merge_classes
 from ...utils.attrs import convert_attrs
@@ -46,27 +46,27 @@ def EmptyState(
         ... )
     """
     user_cls = kwargs.pop("cls", "")
-    
+
     classes = ["py-5"]
     if centered:
         classes.append("text-center")
-        
+
     wrapper_cls = merge_classes(" ".join(classes), user_cls)
-    
+
     attrs: dict[str, Any] = {"cls": wrapper_cls}
     attrs.update(convert_attrs(kwargs))
-    
+
     content = []
-    
+
     if icon:
         content.append(Div(icon, cls=icon_cls))
-        
+
     content.append(H4(title, cls=title_cls))
-    
+
     if description:
         content.append(P(description, cls=description_cls))
-        
+
     if action:
         content.append(Div(action))
-        
+
     return Div(*content, **attrs)

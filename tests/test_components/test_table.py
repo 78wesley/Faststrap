@@ -2,7 +2,7 @@
 
 from fasthtml.common import to_xml
 
-from faststrap.components.display import Table, THead, TBody, TRow, TCell
+from faststrap.components.display import Table, TBody, TCell, THead, TRow
 
 
 class TestTableBasic:

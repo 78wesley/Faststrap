@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from fasthtml.common import A, Button as FTButton
-from fasthtml.common import I, Span
+from fasthtml.common import A, I, Span
+from fasthtml.common import Button as FTButton
 
 from ...core.base import merge_classes
-from ...core.types import VariantType, SizeType
 from ...core.theme import resolve_defaults
+from ...core.types import SizeType, VariantType
 from ...utils.attrs import convert_attrs
 
 
@@ -89,7 +89,7 @@ def Button(
         style: Custom inline style
         **kwargs: Additional HTML attributes (cls, id, hx-*, data-*, etc.)
     """
-    
+
     # Resolve API defaults
     # This automatically picks up global defaults for 'variant', 'size', etc. if the user didn't pass them
     cfg = resolve_defaults(
@@ -100,11 +100,11 @@ def Button(
         disabled=disabled,
         full_width=full_width,
         pill=pill,
-        active=active
+        active=active,
     )
-    
+
     # Extract resolved values
-    c_variant = cfg.get("variant", "primary") # Hardest fallback
+    c_variant = cfg.get("variant", "primary")  # Hardest fallback
     c_size = cfg.get("size")
     c_outline = cfg.get("outline", False)
     c_full_width = cfg.get("full_width", False)

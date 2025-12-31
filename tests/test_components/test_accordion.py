@@ -1,6 +1,7 @@
 """Tests for Accordion component."""
 
 from fasthtml.common import to_xml
+
 from faststrap.components.navigation.accordion import Accordion, AccordionItem
 
 
@@ -14,7 +15,7 @@ class TestAccordion:
             AccordionItem("Content 2", title="Item 2"),
         )
         html = to_xml(acc)
-        
+
         assert "accordion" in html
         assert "accordion-item" in html
         assert "accordion-header" in html
@@ -24,14 +25,13 @@ class TestAccordion:
 
     def test_accordion_ids(self):
         """Accordion generates and propagates IDs."""
-        acc = Accordion(
-            AccordionItem("C1", title="T1"),
-            accordion_id="test-acc"
-        )
+        acc = Accordion(AccordionItem("C1", title="T1"), accordion_id="test-acc")
         html = to_xml(acc)
-        
+
         assert 'id="test-acc"' in html
-        assert 'id="test-acc-item-0"' not in html # Items don't strictly need IDs on the item div, but let's check structure
+        assert (
+            'id="test-acc-item-0"' not in html
+        )  # Items don't strictly need IDs on the item div, but let's check structure
         assert 'data-bs-parent="#test-acc"' in html
         assert 'aria-controls="test-acc-collapse-0"' in html
         assert 'id="test-acc-collapse-0"' in html
@@ -44,11 +44,7 @@ class TestAccordion:
 
     def test_always_open(self):
         """Always open removes data-bs-parent."""
-        acc = Accordion(
-            AccordionItem("C"),
-            always_open=True,
-            accordion_id="open-acc"
-        )
+        acc = Accordion(AccordionItem("C"), always_open=True, accordion_id="open-acc")
         html = to_xml(acc)
         assert 'data-bs-parent="#open-acc"' not in html
 
@@ -59,35 +55,35 @@ class TestAccordion:
             AccordionItem("C2", title="T2", expanded=False),
         )
         html = to_xml(acc)
-        
+
         # Item 1 (Expanded)
         # Button should NOT have 'collapsed' class
         # Content should have 'show' class
-        assert 'accordion-button' in html 
-        assert 'accordion-collapse' in html
-        assert 'collapse' in html
-        assert 'show' in html
-        
+        assert "accordion-button" in html
+        assert "accordion-collapse" in html
+        assert "collapse" in html
+        assert "show" in html
+
         # Item 2 (Collapsed)
         # Button SHOULD have 'collapsed' class
-        assert 'accordion-button' in html
-        assert 'collapsed' in html
+        assert "accordion-button" in html
+        assert "collapsed" in html
 
     def test_custom_classes(self):
         """Custom classes are preserved."""
         acc = Accordion(
             AccordionItem(
-                "Content", 
+                "Content",
                 title="Title",
                 header_cls="custom-header",
                 body_cls="custom-body",
                 button_cls="custom-btn",
-                cls="custom-item"
+                cls="custom-item",
             ),
-            cls="custom-accordion"
+            cls="custom-accordion",
         )
         html = to_xml(acc)
-        
+
         assert "custom-accordion" in html
         assert "custom-item" in html
         assert "custom-header" in html

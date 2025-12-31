@@ -3,10 +3,10 @@
 from .alert import Alert
 from .confirm import ConfirmDialog
 from .modal import Modal
-from .overlays import Tooltip, Popover
+from .overlays import Popover, Tooltip
 from .progress import Progress, ProgressBar
 from .spinner import Spinner
-from .toast import Toast, ToastContainer, SimpleToast
+from .toast import SimpleToast, Toast, ToastContainer
 
 __all__ = [
     "Alert",
@@ -21,4 +21,3 @@ __all__ = [
     "SimpleToast",
     "ToastContainer",
 ]
-

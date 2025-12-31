@@ -48,9 +48,9 @@ def Input(
         size=size,
         disabled=disabled,
         readonly=readonly,
-        required=required
+        required=required,
     )
-    
+
     c_type = cfg.get("input_type", "text")
     c_size = cfg.get("size")
     c_disabled = cfg.get("disabled", False)

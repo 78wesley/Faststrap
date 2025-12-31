@@ -10,8 +10,8 @@ from ...core.base import merge_classes
 from ...core.registry import register
 from ...core.theme import resolve_defaults
 from ...core.types import PlacementType
-from ..forms.button import CloseButton
 from ...utils.attrs import convert_attrs
+from ..forms.button import CloseButton
 
 
 @register(category="navigation", requires_js=True)
@@ -56,9 +56,9 @@ def Drawer(
         body_cls=body_cls,
         footer_cls=footer_cls,
         title_cls=title_cls,
-        close_cls=close_cls
+        close_cls=close_cls,
     )
-    
+
     c_placement = cfg.get("placement", "start")
     c_backdrop = cfg.get("backdrop", True)
     c_scroll = cfg.get("scroll", False)
@@ -72,6 +72,7 @@ def Drawer(
     # Ensure drawer id
     if drawer_id is None:
         from uuid import uuid4
+
         drawer_id = f"drawer-{uuid4().hex}"
 
     # Build offcanvas classes

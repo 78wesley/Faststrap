@@ -9,7 +9,7 @@ from fasthtml.common import A, Button, Div, Li, Ul
 from ...core.base import merge_classes
 from ...core.registry import register
 from ...core.theme import resolve_defaults
-from ...core.types import VariantType, DirectionType
+from ...core.types import DirectionType, VariantType
 from ...utils.attrs import convert_attrs
 
 
@@ -50,9 +50,9 @@ def Dropdown(
         direction=direction,
         toggle_cls=toggle_cls,
         menu_cls=menu_cls,
-        item_cls=item_cls
+        item_cls=item_cls,
     )
-    
+
     c_label = cfg.get("label", "Dropdown")
     c_variant = cfg.get("variant", "primary")
     c_size = cfg.get("size")
@@ -91,7 +91,9 @@ def Dropdown(
 
     if c_split:
         # Action button (left)
-        buttons.append(Button(c_label, cls=merge_classes(btn_class_str, c_toggle_cls), type="button"))
+        buttons.append(
+            Button(c_label, cls=merge_classes(btn_class_str, c_toggle_cls), type="button")
+        )
 
         # Toggle (right)
         buttons.append(

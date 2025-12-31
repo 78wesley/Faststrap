@@ -217,12 +217,13 @@ _DARK_MODE_VARS: dict[str, str] = {
 # Theme Class
 # ============================================================================
 
+
 class Theme:
     """Theme definition for Faststrap.
-    
+
     A Theme contains color variables (primary, secondary, etc.) and can
     generate CSS for light mode, dark mode, or auto mode.
-    
+
     Example:
         >>> theme = Theme({"--bs-primary": "#7BA05B"})
         >>> style = theme.to_style(mode="dark")
@@ -230,7 +231,7 @@ class Theme:
 
     def __init__(self, variables: dict[str, str]):
         """Initialize theme with color variables.
-        
+
         Args:
             variables: CSS variable definitions for colors (primary, secondary, etc.)
         """
@@ -240,8 +241,8 @@ class Theme:
         """Get CSS variables for a specific mode."""
         base_mode_vars = _LIGHT_MODE_VARS if mode == "light" else _DARK_MODE_VARS
         merged = {**base_mode_vars, **self.variables}
-        
-        # Smart mapping: If user provided a "dark" or "light" color, 
+
+        # Smart mapping: If user provided a "dark" or "light" color,
         # use it for the body background in that mode.
         if mode == "dark" and "--bs-dark" in self.variables:
             merged["--bs-body-bg"] = self.variables["--bs-dark"]
@@ -249,27 +250,27 @@ class Theme:
         elif mode == "light" and "--bs-light" in self.variables:
             merged["--bs-body-bg"] = self.variables["--bs-light"]
             merged["--bs-tertiary-bg"] = self.variables["--bs-light"]
-            
+
         return merged
 
     def to_style(self, mode: ModeType = "auto") -> Style:
         """Convert theme to FastHTML Style element.
-        
+
         This generates CSS variables for light and dark modes, and adds
         overrides to ensure components use the custom theme colors.
-        
+
         Args:
             mode: Initial mode ("light", "dark", or "auto")
-        
+
         Returns:
             FastHTML Style element with CSS variables
         """
         light_vars = self._get_mode_vars("light")
         dark_vars = self._get_mode_vars("dark")
-        
+
         light_css = "; ".join(f"{k}: {v}" for k, v in light_vars.items())
         dark_css = "; ".join(f"{k}: {v}" for k, v in dark_vars.items())
-        
+
         # Determine initial variables for :root
         if mode == "auto":
             initial_css = f"""
@@ -289,7 +290,7 @@ class Theme:
 [data-bs-theme="dark"] {{ {dark_css} }}
 
 /* Component overrides for custom theme colors */
-.btn-primary {{ 
+.btn-primary {{
     --bs-btn-bg: var(--bs-primary); --bs-btn-border-color: var(--bs-primary);
     --bs-btn-hover-bg: var(--bs-primary); --bs-btn-hover-border-color: var(--bs-primary);
     --bs-btn-active-bg: var(--bs-primary); --bs-btn-active-border-color: var(--bs-primary);
@@ -324,6 +325,7 @@ class Theme:
 # Theme Factory Functions
 # ============================================================================
 
+
 def create_theme(
     primary: str | None = None,
     secondary: str | None = None,
@@ -334,7 +336,7 @@ def create_theme(
     **extra_vars: str,
 ) -> Theme:
     """Create a custom theme from color values.
-    
+
     Args:
         primary: Primary color (e.g., "#7BA05B")
         secondary: Secondary color
@@ -343,10 +345,10 @@ def create_theme(
         warning: Warning color (defaults to Bootstrap yellow)
         info: Info color (defaults to Bootstrap cyan)
         **extra_vars: Additional CSS variables
-    
+
     Returns:
         Theme instance
-    
+
     Example:
         >>> theme = create_theme(
         ...     primary="#7BA05B",
@@ -355,7 +357,7 @@ def create_theme(
         >>> add_bootstrap(app, theme=theme, mode="dark")
     """
     variables: dict[str, str] = {}
-    
+
     # Add provided colors with auto-generated RGB values
     color_map = {
         "primary": primary,
@@ -365,7 +367,7 @@ def create_theme(
         "warning": warning,
         "info": info,
     }
-    
+
     for name, color in color_map.items():
         if color:
             variables[f"--bs-{name}"] = color
@@ -373,14 +375,14 @@ def create_theme(
             rgb = _hex_to_rgb(color)
             if rgb:
                 variables[f"--bs-{name}-rgb"] = rgb
-    
+
     # Add any extra variables
     for key, value in extra_vars.items():
         # Normalize key to CSS variable format
         if not key.startswith("--"):
             key = f"--bs-{key.replace('_', '-')}"
         variables[key] = value
-    
+
     return Theme(variables)
 
 
@@ -402,13 +404,13 @@ def _hex_to_rgb(hex_color: str) -> str | None:
 
 def get_builtin_theme(name: str) -> Theme:
     """Get a built-in theme by name.
-    
+
     Args:
         name: Theme name (e.g., "green-nature", "blue-ocean")
-    
+
     Returns:
         Theme instance
-    
+
     Raises:
         ValueError: If theme name is not found
     """
@@ -420,7 +422,7 @@ def get_builtin_theme(name: str) -> Theme:
 
 def list_builtin_themes() -> list[str]:
     """List all available built-in theme names.
-    
+
     Returns:
         List of theme names
     """
@@ -453,10 +455,10 @@ _COMPONENT_DEFAULTS: dict[str, dict[str, Any]] = {
 
 def get_component_defaults(component: str) -> dict[str, Any]:
     """Get default values for a component.
-    
+
     Args:
         component: Component name (e.g., "Button")
-    
+
     Returns:
         Dict of default values
     """
@@ -465,11 +467,11 @@ def get_component_defaults(component: str) -> dict[str, Any]:
 
 def set_component_defaults(component: str, **defaults: Any) -> None:
     """Set default values for a component globally.
-    
+
     Args:
         component: Component name (e.g., "Button")
         **defaults: Default values to set
-    
+
     Example:
         >>> set_component_defaults("Button", variant="outline-primary", size="sm")
         >>> # Now all Button() calls use these defaults unless overridden
@@ -481,12 +483,12 @@ def set_component_defaults(component: str, **defaults: Any) -> None:
 
 def reset_component_defaults(component: str | None = None) -> None:
     """Reset component defaults to original values.
-    
+
     Args:
         component: Component name to reset, or None to reset all
     """
     global _COMPONENT_DEFAULTS
-    
+
     original: dict[str, dict[str, Any]] = {
         "Alert": {"variant": "primary", "dismissible": False},
         "Badge": {"variant": "primary", "pill": False},
@@ -505,7 +507,7 @@ def reset_component_defaults(component: str | None = None) -> None:
         "Tabs": {"variant": "tabs", "fill": False, "justified": False},
         "Toast": {"autohide": True, "delay": 5000},
     }
-    
+
     if component is None:
         _COMPONENT_DEFAULTS = original
     elif component in original:
@@ -514,18 +516,18 @@ def reset_component_defaults(component: str | None = None) -> None:
 
 def resolve_defaults(component: str, **kwargs: Any) -> dict[str, Any]:
     """Resolve component attributes by merging defaults with user arguments.
-    
+
     Priority (highest to lowest):
     1. Explicit user arguments (if not None)
     2. Global component defaults (set via set_component_defaults)
-    
+
     Args:
         component: Component name (e.g., "Button")
         **kwargs: Arguments passed by the user
-    
+
     Returns:
         Dict of resolved attributes
-    
+
     Example:
         >>> set_component_defaults("Button", variant="secondary")
         >>> resolve_defaults("Button", variant=None, size="lg")
@@ -533,9 +535,9 @@ def resolve_defaults(component: str, **kwargs: Any) -> dict[str, Any]:
     """
     defaults = get_component_defaults(component)
     resolved = defaults.copy()
-    
+
     for key, value in kwargs.items():
         if value is not None:
             resolved[key] = value
-    
+
     return resolved

@@ -8,18 +8,6 @@ __author__ = "FastStrap Contributors"
 __license__ = "MIT"
 
 # Core functionality
-from .core.assets import add_bootstrap, get_assets
-from .core.base import merge_classes
-from .core.theme import (
-    Theme,
-    create_theme,
-    get_builtin_theme,
-    list_builtin_themes,
-    set_component_defaults,
-    reset_component_defaults,
-    resolve_defaults,
-)
-
 # Display
 from .components.display import (
     Badge,
@@ -42,20 +30,20 @@ from .components.feedback import (
     Popover,
     Progress,
     ProgressBar,
+    SimpleToast,
     Spinner,
     Toast,
     ToastContainer,
-    SimpleToast,
     Tooltip,
 )
 
 # Forms
 from .components.forms import (
     Button,
-    CloseButton,
     ButtonGroup,
     ButtonToolbar,
     Checkbox,
+    CloseButton,
     FileInput,
     FloatingLabel,
     Input,
@@ -86,6 +74,17 @@ from .components.navigation import (
     Pagination,
     TabPane,
     Tabs,
+)
+from .core.assets import add_bootstrap, get_assets
+from .core.base import merge_classes
+from .core.theme import (
+    Theme,
+    create_theme,
+    get_builtin_theme,
+    list_builtin_themes,
+    reset_component_defaults,
+    resolve_defaults,
+    set_component_defaults,
 )
 
 # Utils

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
-from fasthtml.common import Div, Input as FTInput, Label
+from fasthtml.common import Div, Label
+from fasthtml.common import Input as FTInput
 
 from ...core.base import merge_classes
 from ...core.types import SizeType

@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from fasthtml.common import H5, Button, Div
+from fasthtml.common import H5, Div
 
 from ...core.base import merge_classes
 from ...core.registry import register
 from ...core.theme import resolve_defaults
 from ...core.types import SizeType
-from ..forms.button import CloseButton
 from ...utils.attrs import convert_attrs
+from ..forms.button import CloseButton
 
 
 @register(category="feedback", requires_js=True)
@@ -23,7 +23,9 @@ def Modal(
     size: SizeType | None = None,
     centered: bool | None = None,
     scrollable: bool | None = None,
-    fullscreen: bool | Literal["sm-down", "md-down", "lg-down", "xl-down", "xxl-down"] | None = None,
+    fullscreen: (
+        bool | Literal["sm-down", "md-down", "lg-down", "xl-down", "xxl-down"] | None
+    ) = None,
     static_backdrop: bool | None = None,
     fade: bool | None = None,
     dialog_cls: str | None = None,
@@ -65,9 +67,9 @@ def Modal(
         body_cls=body_cls,
         footer_cls=footer_cls,
         title_cls=title_cls,
-        close_cls=close_cls
+        close_cls=close_cls,
     )
-    
+
     c_size = cfg.get("size")
     c_centered = cfg.get("centered", False)
     c_scrollable = cfg.get("scrollable", False)
@@ -85,6 +87,7 @@ def Modal(
     # Ensure modal id
     if modal_id is None:
         from uuid import uuid4
+
         modal_id = f"modal-{uuid4().hex}"
 
     # Build modal dialog classes

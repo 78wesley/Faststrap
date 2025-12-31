@@ -1,7 +1,8 @@
 """Tests for Checkbox, Radio, Switch, and Range components."""
 
 from fasthtml.common import to_xml
-from faststrap.components.forms.checks import Checkbox, Radio, Switch, Range
+
+from faststrap.components.forms.checks import Checkbox, Radio, Range, Switch
 
 
 class TestCheckbox:

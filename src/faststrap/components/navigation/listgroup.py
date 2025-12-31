@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from fasthtml.common import Div, A, Button, Ul, Li
+from fasthtml.common import A, Button, Div, Li, Ul
 
 from ...core.base import merge_classes
 from ...core.types import VariantType

@@ -8,7 +8,7 @@ from fasthtml.common import Button, Div, Strong
 
 from ...core.base import merge_classes
 from ...core.theme import resolve_defaults
-from ...core.types import VariantType, ToastPositionType
+from ...core.types import ToastPositionType, VariantType
 from ...utils.attrs import convert_attrs
 
 
@@ -22,20 +22,15 @@ def SimpleToast(
 ) -> Div:
     """Simple Toast component that works without JavaScript."""
     # Resolve API defaults
-    cfg = resolve_defaults(
-        "SimpleToast",
-        variant=variant,
-        duration=duration,
-        position=position
-    )
-    
+    cfg = resolve_defaults("SimpleToast", variant=variant, duration=duration, position=position)
+
     c_variant = cfg.get("variant", "info")
     c_duration = cfg.get("duration", 5)
     c_position = cfg.get("position", "top-right")
 
     # Build base classes
     classes = ["alert", f"alert-{c_variant}", "alert-dismissible", "fade", "show"]
-    
+
     # Position classes for fixed overlay
     position_classes = {
         "top-right": "position-fixed top-0 end-0 m-3",
@@ -45,20 +40,20 @@ def SimpleToast(
         "top-center": "position-fixed top-0 start-50 translate-middle-x m-3",
         "bottom-center": "position-fixed bottom-0 start-50 translate-middle-x m-3",
     }
-    
+
     classes.append(position_classes.get(c_position, position_classes["top-right"]))
-    
+
     # Merge with user classes
     user_cls = kwargs.pop("cls", "")
     all_classes = merge_classes(" ".join(classes), user_cls)
-    
+
     # Build attributes
     attrs: dict[str, Any] = {
         "cls": all_classes,
         "role": "alert",
         "style": "z-index: 9999; max-width: 400px;",
     }
-    
+
     # Add CSS for auto-hide
     if c_duration > 0:
         style = f"animation: toastFadeOut {c_duration}s ease-in-out {c_duration}s forwards;"
@@ -67,13 +62,13 @@ def SimpleToast(
             attrs["style"] = f"{existing_style}; {style}"
         else:
             attrs["style"] = style
-    
+
     # Convert remaining kwargs
     attrs.update(convert_attrs(kwargs))
-    
+
     # Build toast structure
     parts = []
-    
+
     if title:
         header = Div(
             Strong(title, cls="me-auto"),
@@ -82,15 +77,15 @@ def SimpleToast(
                 type="button",
                 cls="btn-close",
                 aria_label="Close",
-                **{k: v for k, v in attrs.items() if k not in ["cls", "role", "style"]}
+                **{k: v for k, v in attrs.items() if k not in ["cls", "role", "style"]},
             ),
-            cls="alert-heading"
+            cls="alert-heading",
         )
         parts.append(header)
-    
+
     body = Div(*children, cls="mb-0")
     parts.append(body)
-    
+
     return Div(*parts, **attrs)
 
 
@@ -106,13 +101,9 @@ def Toast(
     """Bootstrap Toast component for temporary notifications."""
     # Resolve API defaults
     cfg = resolve_defaults(
-        "Toast",
-        variant=variant,
-        autohide=autohide,
-        delay=delay,
-        animation=animation
+        "Toast", variant=variant, autohide=autohide, delay=delay, animation=animation
     )
-    
+
     c_variant = cfg.get("variant")
     c_autohide = cfg.get("autohide", True)
     c_delay = cfg.get("delay", 5000)

@@ -39,13 +39,9 @@ def Select(
     """
     # Resolve API defaults
     cfg = resolve_defaults(
-        "Select",
-        size=size,
-        disabled=disabled,
-        required=required,
-        multiple=multiple
+        "Select", size=size, disabled=disabled, required=required, multiple=multiple
     )
-    
+
     c_size = cfg.get("size")
     c_disabled = cfg.get("disabled", False)
     c_required = cfg.get("required", False)

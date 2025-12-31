@@ -5,7 +5,7 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from fasthtml.common import Div, Button, H2
+from fasthtml.common import H2, Button, Div
 
 from ...core.base import merge_classes
 from ...utils.attrs import convert_attrs
@@ -78,9 +78,7 @@ def Accordion(
     for i, child in enumerate(children):
         if hasattr(child, "__accordion_item__"):
             # This is an AccordionItem - inject parent reference
-            processed_children.append(
-                child.__accordion_render__(acc_id, i, always_open)
-            )
+            processed_children.append(child.__accordion_render__(acc_id, i, always_open))
         else:
             processed_children.append(child)
 
@@ -110,11 +108,8 @@ class AccordionItemBuilder:
         self.button_cls = button_cls
         self.kwargs = kwargs
 
-    def __accordion_render__(
-        self, parent_id: str, index: int, always_open: bool
-    ) -> Div:
+    def __accordion_render__(self, parent_id: str, index: int, always_open: bool) -> Div:
         """Render the accordion item with parent context."""
-        item_id = f"{parent_id}-item-{index}"
         collapse_id = f"{parent_id}-collapse-{index}"
         header_id = f"{parent_id}-header-{index}"
 

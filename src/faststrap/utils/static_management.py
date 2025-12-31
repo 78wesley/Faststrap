@@ -79,7 +79,7 @@ def is_mounted(app: Any, path: str) -> bool:
                 normalized = r_path.rstrip("/") or "/"
                 if normalized == target:
                     return True
-                    
+
     return False
 
 
@@ -175,8 +175,6 @@ def create_favicon_links(favicon_url: str) -> list[Any]:
 def get_default_favicon_url(use_cdn: bool, static_url: str) -> str:
     """Get the default FastStrap favicon URL."""
     if use_cdn:
-        return (
-            "https://cdn.jsdelivr.net/gh/Faststrap-org/Faststrap@main/src/faststrap/static/favicon.svg"
-        )
+        return "https://cdn.jsdelivr.net/gh/Faststrap-org/Faststrap@main/src/faststrap/static/favicon.svg"
     else:
         return f"{static_url.rstrip('/')}/favicon.svg"

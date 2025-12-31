@@ -35,12 +35,9 @@ def Alert(
     """
     # Resolve API defaults
     cfg = resolve_defaults(
-        "Alert",
-        variant=variant,
-        dismissible=dismissible,
-        heading_cls=heading_cls
+        "Alert", variant=variant, dismissible=dismissible, heading_cls=heading_cls
     )
-    
+
     c_variant = cfg.get("variant", "primary")
     c_dismissible = cfg.get("dismissible", False)
     c_heading_cls = cfg.get("heading_cls", "alert-heading h4")

@@ -5,7 +5,7 @@ from .card import Card
 from .empty_state import EmptyState
 from .figure import Figure
 from .stat_card import StatCard
-from .table import Table, THead, TBody, TRow, TCell
+from .table import Table, TBody, TCell, THead, TRow
 
 __all__ = [
     "Badge",
@@ -19,4 +19,3 @@ __all__ = [
     "TRow",
     "TCell",
 ]
-

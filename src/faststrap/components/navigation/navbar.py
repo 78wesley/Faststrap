@@ -51,13 +51,13 @@ def Navbar(
         expand=expand,
         sticky=sticky,
         fixed=fixed,
-        container=container
+        container=container,
     )
-    
+
     # Use color_scheme (with variant as fallback)
     # Priority: 1. explicit color_scheme, 2. explicit variant, 3. global default
     c_scheme = color_scheme or variant or cfg.get("color_scheme") or cfg.get("variant", "light")
-    
+
     c_bg = cfg.get("bg")
     c_expand = expand if expand is not None else cfg.get("expand", "lg")
     c_sticky = cfg.get("sticky")
@@ -99,7 +99,7 @@ def Navbar(
 
     # Build navbar content
     parts = []
-    
+
     # Merge *children and items
     nav_content = list(children)
     if items:
@@ -122,6 +122,7 @@ def Navbar(
             toggler_id = kwargs.get("id", "navbarContent")
             if "id" not in kwargs:
                 import random
+
                 toggler_id = f"navbar{random.randint(1000, 9999)}"
 
             toggler = Button(
@@ -154,6 +155,7 @@ def Navbar(
             toggler_id = kwargs.get("id", "navbarContent")
             if "id" not in kwargs:
                 import random
+
                 toggler_id = f"navbar{random.randint(1000, 9999)}"
 
             toggler = Button(

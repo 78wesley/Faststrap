@@ -1,8 +1,9 @@
 """Tests for ListGroup and Collapse components."""
 
-from fasthtml.common import to_xml, Div
-from faststrap.components.navigation.listgroup import ListGroup, ListGroupItem, Collapse
+from fasthtml.common import Div, to_xml
+
 from faststrap.components.display import Badge
+from faststrap.components.navigation.listgroup import Collapse, ListGroup, ListGroupItem
 
 
 class TestListGroup:
@@ -29,13 +30,13 @@ class TestListGroup:
         html = to_xml(lg)
         assert "list-group-numbered" in html
         # Implementation decided to return Div for numbered to handle complex content better potentially
-        assert "<div" in html 
+        assert "<div" in html
 
     def test_horizontal(self):
         """Horizontal variants."""
         lg = ListGroup(horizontal=True)
         assert "list-group-horizontal" in to_xml(lg)
-        
+
         lg_md = ListGroup(horizontal="md")
         assert "list-group-horizontal-md" in to_xml(lg_md)
 
@@ -66,7 +67,7 @@ class TestListGroupItem:
         btn = ListGroupItem("Button", action=True)
         html_b = to_xml(btn)
         assert "list-group-item-action" in html_b
-        
+
         # Link implies action
         link = ListGroupItem("Link", href="#")
         html_l = to_xml(link)

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import warnings
 from os import environ
-from typing import Any, Literal
+from typing import Any
 
 from fasthtml.common import Link, Script, Style
 from starlette.staticfiles import StaticFiles
@@ -19,7 +19,7 @@ from ..utils.static_management import (
     is_mounted,
     resolve_static_url,
 )
-from .theme import Theme, get_builtin_theme, ModeType
+from .theme import ModeType, Theme, get_builtin_theme
 
 # Bootstrap versions
 BOOTSTRAP_VERSION = "5.3.3"
@@ -104,9 +104,9 @@ INIT_SCRIPT = Script(
             scope.querySelectorAll('[data-bs-toggle="popover"]')
                  .forEach(el => new bootstrap.Popover(el));
         };
-        
+
         initBS(document);
-        
+
         // HTMX support: Re-initialize on content swap
         document.body.addEventListener('htmx:afterSwap', (evt) => {
             initBS(evt.detail.elt);
@@ -255,12 +255,12 @@ def add_bootstrap(
     # Remove any existing FastStrap headers to prevent accumulation
     new_fs_hdrs = list(favicon_links) + list(bootstrap_assets)
     old_fs_hdrs = getattr(app, "_faststrap_hdrs", [])
-    
+
     current_hdrs = list(getattr(app, "hdrs", []))
-    
+
     # Remove old items by identity if possible
     filtered_hdrs = [h for h in current_hdrs if h not in old_fs_hdrs]
-    
+
     # Prepend new ones
     app.hdrs = new_fs_hdrs + filtered_hdrs
     app._faststrap_hdrs = new_fs_hdrs
@@ -297,7 +297,7 @@ def add_bootstrap(
                 use_cdn=True,
                 mount_static=False,
                 include_favicon=include_favicon,
-                favicon_url=favicon_url
+                favicon_url=favicon_url,
             )
 
     return app

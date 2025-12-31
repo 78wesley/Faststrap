@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from fasthtml.common import Div, Span, Label, Input as FTInput
+from fasthtml.common import Div, Label, Span
+from fasthtml.common import Input as FTInput
 
 from ...core.base import merge_classes
 from ...core.types import SizeType
@@ -107,8 +108,16 @@ def FloatingLabel(
     *,
     label: str,
     input_type: Literal[
-        "text", "password", "email", "number", "url", "tel", "search",
-        "date", "time", "datetime-local"
+        "text",
+        "password",
+        "email",
+        "number",
+        "url",
+        "tel",
+        "search",
+        "date",
+        "time",
+        "datetime-local",
     ] = "text",
     value: str = "",
     placeholder: str = "",

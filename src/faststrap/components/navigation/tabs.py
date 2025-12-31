@@ -34,14 +34,9 @@ def Tabs(
     """
     # Resolve API defaults
     cfg = resolve_defaults(
-        "Tabs",
-        variant=variant,
-        justified=justified,
-        fill=fill,
-        vertical=vertical,
-        htmx=htmx
+        "Tabs", variant=variant, justified=justified, fill=fill, vertical=vertical, htmx=htmx
     )
-    
+
     c_variant = cfg.get("variant", "tabs")
     c_justified = cfg.get("justified", False)
     c_fill = cfg.get("fill", False)
@@ -81,7 +76,7 @@ def Tabs(
 
         btn_id = f"{tab_id}-tab"
         link_classes = merge_classes("nav-link", "active" if is_active else "")
-        
+
         # Enhanced active tab styling for better visibility
         if is_active:
             link_classes = merge_classes(link_classes, "text-white", "fw-bold")

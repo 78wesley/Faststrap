@@ -2,10 +2,10 @@
 
 from .button import Button, CloseButton
 from .buttongroup import ButtonGroup, ButtonToolbar
-from .checks import Checkbox, Radio, Switch, Range
+from .checks import Checkbox, Radio, Range, Switch
 from .file import FileInput
 from .input import Input
-from .inputgroup import InputGroup, InputGroupText, FloatingLabel
+from .inputgroup import FloatingLabel, InputGroup, InputGroupText
 from .select import Select
 
 __all__ = [
@@ -24,6 +24,3 @@ __all__ = [
     "FloatingLabel",
     "Select",
 ]
-
-
-

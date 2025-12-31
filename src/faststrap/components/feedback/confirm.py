@@ -5,8 +5,8 @@ from typing import Any
 from fasthtml.common import Div, P
 
 from ...core.types import VariantType
-from ..forms.button import Button
 from ..feedback.modal import Modal
+from ..forms.button import Button
 
 
 def ConfirmDialog(
@@ -19,7 +19,7 @@ def ConfirmDialog(
     dialog_id: str | None = None,
     hx_confirm_method: str = "post",
     hx_confirm_url: str | None = None,
-    hx_target: str | None = None, 
+    hx_target: str | None = None,
     hx_swap: str | None = None,
     **kwargs: Any,
 ) -> Div:
@@ -56,7 +56,7 @@ def ConfirmDialog(
         "variant": variant,
         "data_bs_dismiss": "modal",
     }
-    
+
     if hx_confirm_url:
         # We pass hx arguments directly to Button
         if hx_confirm_method == "get":
@@ -69,17 +69,17 @@ def ConfirmDialog(
             btn_attrs["hx_patch"] = hx_confirm_url
         elif hx_confirm_method == "delete":
             btn_attrs["hx_delete"] = hx_confirm_url
-            
+
     if hx_target:
         btn_attrs["hx_target"] = hx_target
-        
+
     if hx_swap:
         btn_attrs["hx_swap"] = hx_swap
 
     footer = Div(
         Button(cancel_text, variant="secondary", data_bs_dismiss="modal"),
         Button(confirm_text, **btn_attrs),
-        cls="d-flex justify-content-end gap-2"
+        cls="d-flex justify-content-end gap-2",
     )
 
     return Modal(
@@ -88,5 +88,5 @@ def ConfirmDialog(
         footer=footer,
         modal_id=dialog_id,
         centered=True,
-        **kwargs
+        **kwargs,
     )

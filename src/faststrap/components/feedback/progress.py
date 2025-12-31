@@ -35,13 +35,8 @@ def Progress(
         **kwargs: Additional HTML attributes
     """
     # Resolve API defaults
-    cfg = resolve_defaults(
-        "Progress",
-        variant=variant,
-        striped=striped,
-        animated=animated
-    )
-    
+    cfg = resolve_defaults("Progress", variant=variant, striped=striped, animated=animated)
+
     c_variant = cfg.get("variant", "primary")
     c_striped = cfg.get("striped", False)
     c_animated = cfg.get("animated", False)
@@ -95,12 +90,9 @@ def ProgressBar(
     """Individual progress bar for stacked progress bars."""
     # Resolve API defaults
     cfg = resolve_defaults(
-        "Progress", # Reusing Progress defaults
-        variant=variant,
-        striped=striped,
-        animated=animated
+        "Progress", variant=variant, striped=striped, animated=animated  # Reusing Progress defaults
     )
-    
+
     c_variant = cfg.get("variant", "primary")
     c_striped = cfg.get("striped", False)
     c_animated = cfg.get("animated", False)

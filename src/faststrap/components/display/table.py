@@ -4,17 +4,15 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from fasthtml.common import Table as FTTable, Thead, Tbody, Tr, Th, Td, Div
+from fasthtml.common import Div, Tbody, Td, Th, Thead, Tr
+from fasthtml.common import Table as FTTable
 
 from ...core.base import merge_classes
-from ...core.types import VariantType
 from ...utils.attrs import convert_attrs
-
 
 # Table-specific types
 TableVariantType = Literal[
-    "primary", "secondary", "success", "danger",
-    "warning", "info", "light", "dark"
+    "primary", "secondary", "success", "danger", "warning", "info", "light", "dark"
 ]
 
 

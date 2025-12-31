@@ -7,7 +7,6 @@ from typing import Any
 from fasthtml.common import A, Li, Nav, Ol
 
 from ...core.base import merge_classes
-from ...core.theme import resolve_defaults
 from ...utils.attrs import convert_attrs
 
 
@@ -21,9 +20,6 @@ def Breadcrumb(
         *items: Breadcrumb items as (label, href) or (label, href, active)
         **kwargs: Additional HTML attributes
     """
-    # Resolve API defaults
-    cfg = resolve_defaults("Breadcrumb", **kwargs)
-    
     crumbs: list[Any] = []
     last_idx = len(items) - 1
 
@@ -34,7 +30,9 @@ def Breadcrumb(
             label, href = item
             active = idx == last_idx
         else:
-            raise ValueError(f"Breadcrumb item must be (label, href) or (label, href, active), got {item}")
+            raise ValueError(
+                f"Breadcrumb item must be (label, href) or (label, href, active), got {item}"
+            )
 
         item_cls = "breadcrumb-item" + (" active" if active else "")
 

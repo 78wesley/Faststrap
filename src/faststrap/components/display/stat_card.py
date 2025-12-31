@@ -2,11 +2,9 @@
 
 from typing import Any, Literal
 
-from fasthtml.common import Div, H3, P, Span
+from fasthtml.common import H3, Div, P, Span
 
-from ...core.base import merge_classes
 from ...core.types import VariantType
-from ...utils.attrs import convert_attrs
 from .card import Card
 
 
@@ -48,19 +46,19 @@ def StatCard(
         trend_cls = "text-success"
     elif trend_type == "down":
         trend_cls = "text-danger"
-    
+
     trend_el = Span(trend, cls=f"{trend_cls} small fw-bold ms-2") if trend else None
-    
+
     # Value wrapper
     value_el = H3(value, trend_el, cls="mb-0 fw-bold")
-    
+
     # Title
     title_cls = "text-muted small text-uppercase fw-semibold"
     if inverse:
         title_cls = "text-white-50 small text-uppercase fw-semibold"
-        
+
     title_el = P(title, cls=title_cls)
-    
+
     # Icon logic
     icon_el = None
     if icon:
@@ -69,7 +67,7 @@ def StatCard(
             icon_wrapper_cls = f"{icon_wrapper_cls} {icon_bg}"
         else:
             icon_wrapper_cls = f"{icon_wrapper_cls} bg-body-tertiary"
-            
+
         icon_el = Div(icon, cls=icon_wrapper_cls)
 
     # Layout: Row with col for text, col-auto for icon
@@ -77,14 +75,9 @@ def StatCard(
         body_content = Div(
             Div(title_el, value_el, cls="flex-grow-1"),
             icon_el,
-            cls="d-flex align-items-center justify-content-between"
+            cls="d-flex align-items-center justify-content-between",
         )
     else:
         body_content = Div(title_el, value_el)
 
-    return Card(
-        body_content,
-        variant=variant,
-        inverse=inverse,
-        **kwargs
-    )
+    return Card(body_content, variant=variant, inverse=inverse, **kwargs)

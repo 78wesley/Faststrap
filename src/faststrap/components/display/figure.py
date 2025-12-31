@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from fasthtml.common import Figure as FTFigure, Figcaption, Img
+from fasthtml.common import Figcaption, Img
+from fasthtml.common import Figure as FTFigure
 
 from ...core.base import merge_classes
 from ...utils.attrs import convert_attrs
@@ -45,7 +46,7 @@ def Figure(
 
     Example:
         >>> Figure("image.jpg", caption="A nice view")
-        
+
         >>> Figure("avatar.png", size="50%", rounded=True, align="center")
     """
     user_cls = kwargs.pop("cls", "")
@@ -59,7 +60,7 @@ def Figure(
         img_classes.append("rounded")
     if thumbnail:
         img_classes.append("img-thumbnail")
-    
+
     all_img_cls = merge_classes(" ".join(img_classes), img_cls)
 
     # Caption alignment
@@ -76,7 +77,7 @@ def Figure(
 
     # Figure attributes
     attrs: dict[str, Any] = {"cls": figure_cls}
-    
+
     # Handle size on figure or image? Bootstrap usually puts explicit width on image?
     # Actually, figure usually fits content.
     # If size is standard w-25, w-50, w-75, w-100, add to figure class?
@@ -99,7 +100,7 @@ def Figure(
 
     # Content
     content = [Img(src=src, alt=alt, cls=all_img_cls)]
-    
+
     if caption:
         content.append(Figcaption(caption, cls=all_cap_cls))
 

@@ -8,7 +8,7 @@ from fasthtml.common import A, Li, Nav, Span, Ul
 
 from ...core.base import merge_classes
 from ...core.theme import resolve_defaults
-from ...core.types import SizeType, AlignType
+from ...core.types import AlignType, SizeType
 from ...utils.attrs import convert_attrs
 
 
@@ -44,9 +44,9 @@ def Pagination(
         max_pages=max_pages,
         base_url=base_url,
         show_first_last=show_first_last,
-        show_prev_next=show_prev_next
+        show_prev_next=show_prev_next,
     )
-    
+
     c_size = cfg.get("size")
     c_align = cfg.get("align", "start")
     c_max_pages = cfg.get("max_pages", 5)
@@ -82,7 +82,12 @@ def Pagination(
 
     # First page
     if c_show_first_last and current_page > 1:
-        links.append(Li(A("«", href=f"{c_base_url}?page=1", cls="page-link", aria_label="First"), cls="page-item"))
+        links.append(
+            Li(
+                A("«", href=f"{c_base_url}?page=1", cls="page-link", aria_label="First"),
+                cls="page-item",
+            )
+        )
 
     # Previous page
     if c_show_prev_next:
@@ -91,7 +96,12 @@ def Pagination(
         links.append(
             Li(
                 (
-                    A("‹", href=f"{c_base_url}?page={prev_page}", cls="page-link", aria_label="Previous")
+                    A(
+                        "‹",
+                        href=f"{c_base_url}?page={prev_page}",
+                        cls="page-link",
+                        aria_label="Previous",
+                    )
                     if not prev_disabled
                     else Span("‹", cls="page-link", aria_hidden="true")
                 ),
@@ -105,7 +115,11 @@ def Pagination(
         href = f"{c_base_url}?page={page}"
         links.append(
             Li(
-                A(str(page), href=href, cls="page-link") if not active else Span(str(page), cls="page-link"),
+                (
+                    A(str(page), href=href, cls="page-link")
+                    if not active
+                    else Span(str(page), cls="page-link")
+                ),
                 cls="page-item" + (" active" if active else ""),
                 aria_current="page" if active else None,
             )
@@ -118,7 +132,12 @@ def Pagination(
         links.append(
             Li(
                 (
-                    A("›", href=f"{c_base_url}?page={next_page}", cls="page-link", aria_label="Next")
+                    A(
+                        "›",
+                        href=f"{c_base_url}?page={next_page}",
+                        cls="page-link",
+                        aria_label="Next",
+                    )
                     if not next_disabled
                     else Span("›", cls="page-link", aria_hidden="true")
                 ),
@@ -129,7 +148,10 @@ def Pagination(
     # Last page
     if c_show_first_last and current_page < total_pages:
         links.append(
-            Li(A("»", href=f"{c_base_url}?page={total_pages}", cls="page-link", aria_label="Last"), cls="page-item")
+            Li(
+                A("»", href=f"{c_base_url}?page={total_pages}", cls="page-link", aria_label="Last"),
+                cls="page-item",
+            )
         )
 
     # Build pagination

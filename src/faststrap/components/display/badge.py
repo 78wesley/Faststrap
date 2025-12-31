@@ -35,7 +35,7 @@ def Badge(
         variant=variant,
         pill=pill,
     )
-    
+
     c_variant = cfg.get("variant", "primary")
     c_pill = cfg.get("pill", False)
 

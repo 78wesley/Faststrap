@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
-from fasthtml.common import Div, Input, Label, Script, Img
+from fasthtml.common import Div, Img, Input, Label, Script
 
 from ...core.base import merge_classes
 from ...core.types import SizeType
@@ -109,7 +109,7 @@ def FileInput(
 
     if preview_id:
         real_preview_id = f"{f_id}-preview" if preview_id == "auto" else preview_id
-        
+
         # JS to handle preview
         js_code = f"""
         document.getElementById('{f_id}').addEventListener('change', function(e) {{
@@ -129,11 +129,11 @@ def FileInput(
         }});
         """
         script = Script(js_code)
-        
+
         # Determine attributes for preview trigger - simpler to just use ID in script
         # Alternatively, we could attach onchange handler directly to input?
         # Let's stick to inline script for simplicity as it keeps logic self-contained
-        
+
         if preview_id == "auto":
             preview_area = Img(
                 id=real_preview_id,
@@ -141,15 +141,15 @@ def FileInput(
                 style=f"display: none; max-height: {preview_max_height};",
                 alt="File preview",
             )
-            
+
     elements.append(Input(**input_attrs))
-    
+
     if helper_text:
         elements.append(Div(helper_text, cls="form-text"))
-        
+
     if preview_area:
         elements.append(preview_area)
-        
+
     if script:
         elements.append(script)
 

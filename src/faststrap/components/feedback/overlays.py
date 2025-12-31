@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
 from fasthtml.common import Span
 
-from ...core.base import merge_classes
 from ...core.types import PlacementType, TriggerType
 from ...utils.attrs import convert_attrs
 
@@ -39,7 +38,7 @@ def Tooltip(
 
     Example:
         >>> Tooltip("I am a tooltip", Button("Hover me"))
-        
+
         >>> Tooltip("<b>Bold</b> tip", Icon("info"), html=True)
     """
     # Build attributes
@@ -54,7 +53,7 @@ def Tooltip(
         attrs["data-bs-html"] = "true"
 
     attrs.update(convert_attrs(kwargs))
-    
+
     # We use Span by default as it's inline and non-intrusive
     # Ideally users pass a single child, but we support multiple
     return Span(*children, **attrs)
@@ -108,7 +107,7 @@ def Popover(
         attrs["data-bs-html"] = "true"
 
     attrs.update(convert_attrs(kwargs))
-    
+
     # Using Span ("d-inline-block" might be needed for some triggers if wrapper)
     # But let's trust user or default behavior
     return Span(*children, **attrs)

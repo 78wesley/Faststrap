@@ -9,7 +9,6 @@ from ...core.theme import resolve_defaults
 from ...utils.attrs import convert_attrs
 
 
-
 def Card(
     *children: Any,
     title: str | None = None,
@@ -70,9 +69,9 @@ def Card(
         footer_cls=footer_cls,
         title_cls=title_cls,
         subtitle_cls=subtitle_cls,
-        text_cls=text_cls
+        text_cls=text_cls,
     )
-    
+
     c_title = cfg.get("title")
     c_subtitle = cfg.get("subtitle")
     c_header = cfg.get("header")
@@ -80,7 +79,7 @@ def Card(
     c_img_top = cfg.get("img_top")
     c_img_bottom = cfg.get("img_bottom")
     c_img_overlay = cfg.get("img_overlay", False)
-    
+
     # CSS classes (fallback to empty string if None)
     c_header_cls = cfg.get("header_cls") or ""
     c_body_cls = cfg.get("body_cls") or ""
@@ -152,4 +151,3 @@ def Card(
         parts.append(Div(c_footer, cls=merge_classes("card-footer text-muted", c_footer_cls)))
 
     return Div(*parts, **attrs)
-
