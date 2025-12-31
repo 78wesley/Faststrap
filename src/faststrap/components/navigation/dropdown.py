@@ -1,84 +1,67 @@
 """Bootstrap Dropdown component for Faststrap."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import A, Button, Div, Li, Ul
 
 from ...core.base import merge_classes
+from ...core.registry import register
+from ...core.theme import resolve_defaults
+from ...core.types import VariantType, DirectionType
 from ...utils.attrs import convert_attrs
 
-VariantType = Literal[
-    "primary", "secondary", "success", "danger", "warning", "info", "light", "dark"
-]
 
-DirectionType = Literal["down", "up", "start", "end"]
-
-
+@register(category="navigation", requires_js=True)
 def Dropdown(
     *items: Any,
-    label: str = "Dropdown",
-    variant: VariantType = "primary",
-    size: Literal["sm", "lg"] | None = None,
-    split: bool = False,
-    direction: DirectionType = "down",
+    label: str | None = None,
+    variant: VariantType | None = None,
+    size: str | None = None,
+    split: bool | None = None,
+    direction: DirectionType | None = None,
+    toggle_cls: str | None = None,
+    menu_cls: str | None = None,
+    item_cls: str | None = None,
     **kwargs: Any,
 ) -> Div:
     """Bootstrap Dropdown component for contextual menus.
 
     Args:
-        *items: Dropdown menu items (strings, A elements, or "---" for dividers)
+        *items: Dropdown menu items
         label: Button label text
         variant: Bootstrap button variant
         size: Button size
         split: Use split button style
-        direction: Dropdown direction (down, up, start=left, end=right)
+        direction: Dropdown direction (down, up, start, end)
+        toggle_cls: Additional classes for the toggle button
+        menu_cls: Additional classes for the dropdown menu
+        item_cls: Additional classes for dropdown items
         **kwargs: Additional HTML attributes (cls, id, hx-*, data-*, etc.)
-
-    Returns:
-        Div containing dropdown button and menu
-
-    Example:
-        Basic dropdown:
-        >>> Dropdown(
-        ...     "Action",
-        ...     "Another action",
-        ...     "---",  # Divider
-        ...     "Separated link",
-        ...     label="Actions"
-        ... )
-
-        Split button:
-        >>> Dropdown(
-        ...     "Edit",
-        ...     "Delete",
-        ...     label="Options",
-        ...     split=True,
-        ...     variant="success"
-        ... )
-
-        Dropup:
-        >>> Dropdown(
-        ...     "Item 1",
-        ...     "Item 2",
-        ...     label="Dropup",
-        ...     direction="up"
-        ... )
-
-        With HTMX:
-        >>> Dropdown(
-        ...     A("Load More", hx_get="/items", hx_target="#content"),
-        ...     "Settings",
-        ...     label="Menu"
-        ... )
-
-    Note:
-        - Items can be strings (converted to links) or A/Button elements
-        - Use "---" string for dividers between items
-        - Supports all Bootstrap dropdown features
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/dropdowns/
     """
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Dropdown",
+        label=label,
+        variant=variant,
+        size=size,
+        split=split,
+        direction=direction,
+        toggle_cls=toggle_cls,
+        menu_cls=menu_cls,
+        item_cls=item_cls
+    )
+    
+    c_label = cfg.get("label", "Dropdown")
+    c_variant = cfg.get("variant", "primary")
+    c_size = cfg.get("size")
+    c_split = cfg.get("split", False)
+    c_direction = cfg.get("direction", "down")
+    c_toggle_cls = cfg.get("toggle_cls", "")
+    c_menu_cls = cfg.get("menu_cls", "")
+    c_item_cls = cfg.get("item_cls", "")
+
     # ---- Container classes ------------------------------------------------ #
     container_classes = []
 
@@ -88,16 +71,16 @@ def Dropdown(
             "start": "dropstart",
             "end": "dropend",
             "down": "dropdown",
-        }[direction]
+        }[c_direction]
     )
 
-    if split:
+    if c_split:
         container_classes.append("btn-group")
 
     # ---- Button classes --------------------------------------------------- #
-    btn_classes = ["btn", f"btn-{variant}"]
-    if size:
-        btn_classes.append(f"btn-{size}")
+    btn_classes = ["btn", f"btn-{c_variant}"]
+    if c_size:
+        btn_classes.append(f"btn-{c_size}")
 
     btn_class_str = " ".join(btn_classes)
 
@@ -106,14 +89,14 @@ def Dropdown(
     # ---- Build buttons ---------------------------------------------------- #
     buttons: list[Any] = []
 
-    if split:
+    if c_split:
         # Action button (left)
-        buttons.append(Button(label, cls=btn_class_str, type="button"))
+        buttons.append(Button(c_label, cls=merge_classes(btn_class_str, c_toggle_cls), type="button"))
 
         # Toggle (right)
         buttons.append(
             Button(
-                "",  # Empty for split
+                "",
                 cls=merge_classes(btn_class_str, "dropdown-toggle dropdown-toggle-split"),
                 type="button",
                 id=toggle_id,
@@ -124,8 +107,8 @@ def Dropdown(
     else:
         buttons.append(
             Button(
-                label,
-                cls=merge_classes(btn_class_str, "dropdown-toggle"),
+                c_label,
+                cls=merge_classes(btn_class_str, "dropdown-toggle", c_toggle_cls),
                 type="button",
                 id=toggle_id,
                 data_bs_toggle="dropdown",
@@ -142,7 +125,7 @@ def Dropdown(
             menu_items.append(Li(cls="dropdown-divider"))
             continue
 
-        # Check for hr element by name attribute
+        # Check for hr element
         if hasattr(item, "name") and item.name == "hr":
             menu_items.append(Li(cls="dropdown-divider"))
             continue
@@ -153,7 +136,7 @@ def Dropdown(
                 Li(
                     A(
                         item,
-                        cls="dropdown-item",
+                        cls=merge_classes("dropdown-item", c_item_cls),
                         href="#",
                         role="menuitem",
                     )
@@ -163,29 +146,28 @@ def Dropdown(
 
         # A / Button elements
         if hasattr(item, "name") and item.name in {"a", "button"}:
-            cls = merge_classes("dropdown-item", item.attrs.get("cls", ""))
-            # Clone the element with updated class
+            cls = merge_classes("dropdown-item", c_item_cls, item.attrs.get("cls", ""))
             cloned_attrs = {**item.attrs, "cls": cls}
             cloned = item.__class__(*item.children, **cloned_attrs)
             menu_items.append(Li(cloned))
             continue
 
         # Fallback wrapper
-        menu_items.append(Li(item, cls="dropdown-item"))
+        menu_items.append(Li(item, cls=merge_classes("dropdown-item", c_item_cls)))
 
     # ---- Build menu -------------------------------------------------------- #
     menu = Ul(
         *menu_items,
-        cls="dropdown-menu",
+        cls=merge_classes("dropdown-menu", c_menu_cls),
         role="menu",
         aria_labelledby=toggle_id,
     )
 
     # ---- Final container --------------------------------------------------- #
     user_cls = kwargs.pop("cls", "")
-    container_cls = merge_classes(" ".join(container_classes), user_cls)
+    final_container_cls = merge_classes(" ".join(container_classes), user_cls)
 
-    attrs: dict[str, Any] = {"cls": container_cls}
+    attrs: dict[str, Any] = {"cls": final_container_cls}
     attrs.update(convert_attrs(kwargs))
 
     return Div(*buttons, menu, **attrs)
@@ -197,22 +179,7 @@ def DropdownItem(
     disabled: bool = False,
     **kwargs: Any,
 ) -> A:
-    """Dropdown item helper.
-
-    Args:
-        *children: Item content
-        active: Whether item is active
-        disabled: Whether item is disabled
-        **kwargs: Additional HTML attributes
-
-    Returns:
-        A element with dropdown-item class
-
-    Example:
-        >>> DropdownItem("Action")
-        >>> DropdownItem("Active Item", active=True)
-        >>> DropdownItem("Disabled", disabled=True)
-    """
+    """Dropdown item helper."""
     classes = ["dropdown-item"]
     if active:
         classes.append("active")
@@ -239,12 +206,5 @@ def DropdownItem(
 
 
 def DropdownDivider() -> Li:
-    """Divider helper.
-
-    Returns:
-        Li element with dropdown-divider class
-
-    Example:
-        >>> DropdownDivider()
-    """
+    """Divider helper."""
     return Li(cls="dropdown-divider")

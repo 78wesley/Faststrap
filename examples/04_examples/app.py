@@ -100,7 +100,7 @@ def home():
                 A("Docs", href="#docs", cls="nav-link"),
                 A(
                     "GitHub",
-                    href="https://github.com/Evayoung/Faststrap",
+                    href="https://github.com/Faststrap-org/Faststrap",
                     cls="nav-link",
                     target="_blank",
                 ),
@@ -706,7 +706,7 @@ def home():
                 A(
                     Icon("github", cls="me-2"),
                     "GitHub",
-                    href="https://github.com/Evayoung/Faststrap",
+                    href="https://github.com/Faststrap-org/Faststrap",
                     target="_blank",
                     cls="d-flex align-items-center text-decoration-none text-dark mb-3 p-2 rounded",
                 ),

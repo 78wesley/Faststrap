@@ -1,28 +1,21 @@
 """Bootstrap Badge component for status indicators and labels."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import Span
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
+from ...core.types import VariantType
 from ...utils.attrs import convert_attrs
-
-VariantType = Literal[
-    "primary",
-    "secondary",
-    "success",
-    "danger",
-    "warning",
-    "info",
-    "light",
-    "dark",
-]
 
 
 def Badge(
     *children: Any,
-    variant: VariantType = "primary",
-    pill: bool = False,
+    variant: VariantType | None = None,
+    pill: bool | None = None,
     **kwargs: Any,
 ) -> Span:
     """Bootstrap Badge component for status indicators and labels.
@@ -35,38 +28,25 @@ def Badge(
 
     Returns:
         FastHTML Span element with badge classes
-
-    Example:
-        Basic usage:
-        >>> Badge("New", variant="success")
-
-        Pill style:
-        >>> Badge("99+", variant="danger", pill=True)
-
-        With icon:
-        >>> Badge(Icon("check"), "Verified", variant="info")
-
-        In button:
-        >>> Button("Messages ", Badge("4", variant="danger"))
-
-        With HTMX:
-        >>> Badge("Live", variant="warning", hx_get="/status", hx_trigger="every 5s")
-
-    Note:
-        Badges scale to match their immediate parent's font size.
-        Use text-bg-* classes for colored backgrounds with contrasting text.
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/badge/
     """
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Badge",
+        variant=variant,
+        pill=pill,
+    )
+    
+    c_variant = cfg.get("variant", "primary")
+    c_pill = cfg.get("pill", False)
+
     # Build base classes
     classes = ["badge"]
 
     # Add variant background
-    classes.append(f"text-bg-{variant}")
+    classes.append(f"text-bg-{c_variant}")
 
     # Add pill style if requested
-    if pill:
+    if c_pill:
         classes.append("rounded-pill")
 
     # Merge with user classes

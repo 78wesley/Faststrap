@@ -89,7 +89,7 @@ def test_navbar_no_container():
     # Should have navbar but not wrapped in container
     assert "navbar" in html
     # Container should not be a direct wrapper (might be in children)
-    assert '<div class="container"' not in html[:200]
+    assert 'class="container"' not in html[:200]
 
 
 def test_navbar_container_responsive():

@@ -288,7 +288,7 @@ When building a component, reference Bootstrap docs:
 
 ## 🚀 Component Priority List
 
-### **✅ Phase 3 Complete (v0.3.0)**
+### **✅ Phase 3 Complete (v0.3.1)**
 1. ✅ Tabs & TabPane
 2. ✅ Dropdown (with DropdownItem, DropdownDivider)
 3. ✅ Input (all HTML5 types)
@@ -298,17 +298,27 @@ When building a component, reference Bootstrap docs:
 7. ✅ Spinner
 8. ✅ Progress & ProgressBar
 
-### **🎯 Phase 4 Next (v0.4.0 - Q2 2025):**
-9. Table (responsive, striped, hoverable)
-10. Accordion (collapsible panels)
-11. Carousel (image sliders)
-12. ListGroup (versatile lists)
-13. Tooltip (contextual hints)
-14. Popover (rich overlays)
-15. Checkbox (standard, switch, inline)
-16. Radio (standard, button style)
-17. Range (sliders)
-18. FileInput (file uploads)
+### **🎯 Phase 4A Next (v0.4.0 - Jan 2026):**
+1. Table (+ THead, TBody, TRow, TCell) — responsive, striped, hover
+2. Accordion (+ AccordionItem) — collapsible panels
+3. Checkbox — standard, inline, validation
+4. Radio — standard, button style
+5. Switch — toggle variant
+6. Range — slider with labels
+7. ListGroup (+ ListGroupItem) — actionable, badges
+8. Collapse — show/hide content
+9. InputGroup — prepend/append addons
+10. FloatingLabel — animated label inputs
+
+### **🎯 Phase 4B (v0.4.5 - Feb 2026):**
+11. FileInput — single/multiple, drag-drop preview
+12. Tooltip — Bootstrap JS init pattern
+13. Popover — rich content overlays
+14. Figure — image + caption wrapper
+15. ConfirmDialog — modal preset for confirmations
+16. EmptyState — placeholder component
+17. StatCard — metric display card
+18. Hero — landing page hero section
 
 See [ROADMAP.md](ROADMAP.md) for complete timeline.
 
@@ -337,8 +347,8 @@ When asking an LLM to build a component:
 
 ## 🤝 Getting Help
 
-- **Questions:** [GitHub Discussions](https://github.com/Evayoung/Faststrap/discussions)
-- **Bugs:** [GitHub Issues](https://github.com/Evayoung/Faststrap/issues)
+- **Questions:** [GitHub Discussions](https://github.com/Faststrap-org/Faststrap/discussions)
+- **Bugs:** [GitHub Issues](https://github.com/Faststrap-org/Faststrap/issues)
 - **PRs:** We review within 48 hours
 - **Discord:** [FastHTML Community](https://discord.gg/qcXvcxMhdP)
 
@@ -370,14 +380,16 @@ All checks pass? Submit PR! 🎉
 
 ---
 
-## 📊 Current Stats (v0.3.0)
+## 📊 Current Stats (v0.3.1)
 
-- ✅ **20 components** (12 from Phase 1+2, 8 new in Phase 3)
-- ✅ **219 tests** passing (80% coverage)
+- ✅ **38 components** (20 from Phase 1-3, 18 from Phase 4)
+- ✅ **230+ tests** passing (80%+ coverage)
 - ✅ **Centralized convert_attrs()** for consistency
 - ✅ **Full HTMX integration** across all components
 - ✅ **Bootstrap 5.3.3** compliant
+- 🎯 **Target: 50 components** in v0.5.0
+- 🎯 **Target: 100+ components** by v1.0.0
 
 ---
 
-**Ready to build? Pick a component from Phase 4 and start coding!**
+**Ready to build? Pick a component from Phase 4A and start coding!**

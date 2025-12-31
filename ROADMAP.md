@@ -4,121 +4,174 @@
 
 ---
 
-## Current Status (v0.3.0 – Released Dec 12, 2025)
+## Current Status (v0.4.5 – February 2026)
 
-**20 components live** – Phase 1 through 3 complete  
-**219 tests** – 80%+ coverage  
+**38 components live** – Phase 1 through 4B complete  
+**230+ tests** – 80%+ coverage  
 **Full HTMX + Bootstrap 5.3.3 support**  
 **Zero custom JavaScript required**
 
 ### Completed Phases
 
-| Phase | Components | Status       | Released     |
-|------|------------|--------------|--------------|
-| 1–2  | 12         | Complete     | Dec 2025     |
-| 3    | +8 (Tabs, Dropdown, Input, Select, Breadcrumb, Pagination, Spinner, Progress) | Complete | **Dec 12, 2025** |
+| Phase | Components | Status | Released |
+|-------|------------|--------|----------|
+| 1–2 | 12 | ✅ Complete | Dec 2025 |
+| 3 | +8 (Tabs, Dropdown, Input, Select, Breadcrumb, Pagination, Spinner, Progress) | ✅ Complete | Dec 2025 |
+| 4A | +10 (Table, Accordion, Checkbox, Radio, Switch, Range, ListGroup, Collapse, InputGroup, FloatingLabel) | ✅ Complete | Jan 2026 |
+| 4B | +8 (FileInput, Tooltip, Popover, Figure, ConfirmDialog, EmptyState, StatCard, Hero) | ✅ Complete | Feb 2026 |
 
-**Total: 20 production-ready components**
-
----
-
-## Phase 4 – Now Open for Contributions (v0.4.0 – Target Q2 2026)
-
-**Goal:** Reach **28–30 components** by end of 1st quarter-2026  
-**Focus:** Most requested missing Bootstrap primitives
-
-### High-Priority Components (Help Wanted!)
-
-| Priority | Component        | Status       | Issue / Owner         | Notes |
-|---------|------------------|--------------|-----------------------|-------|
-| 1       | `Table`          | Open         | —                     | Responsive, striped, hover, dark variant |
-| 2       | `Accordion`      | Open         | —                     | Flush, always-open, icons |
-| 3       | `Checkbox` / `Radio` | Open     | —                     | Inline, switches, button groups |
-| 4       | `Range` (slider) | Open         | —                     | With labels, steps |
-| 5       | `FileInput`      | Open         | —                     | Multiple, drag & drop preview |
-| 6       | `Tooltip`        | Open         | —                     | Requires Bootstrap JS init |
-| 7       | `Popover`        | Open         | —                     | Rich content |
-| 8       | `Carousel`       | Open         | —                     | Indicators + controls |
-| 9       | `ListGroup`      | Open         | —                     | Actionable, badges |
-
-Claim any of these → open an issue with “I’ll take X” → get assigned → PR reviewed in <48h.
+**Total: 38 production-ready components**
 
 ---
 
-## Future Phases (Community-Driven)
+## Phase 4A – Core Bootstrap Completion (v0.4.0 – Complete)
 
-| Phase | Target     | Goal Components | Focus Area                   |
-|------|------------|------------------|------------------------------|
-| 5    | Q3–Q4 2025 | ~50 total        | SaaS & Dashboard Patterns    |
-| 6    | 2026       | 80–100 total     | Advanced UI + Integrations   |
-| 7    | 2026+      | 100+             | Full Bootstrap parity + extras |
+✅ **30 total components reached**
 
-### Planned Higher-Level Components (Phase 5+)
-- `DataTable` (sortable, searchable, paginated)
-- `Form` + `Field` helpers (auto-validation, layout)
-- `Sidebar`, `DashboardLayout`, `StatCard`
-- `ModalForm`, `ConfirmDialog`
-- `ToastContainer` manager
-- `DarkModeToggle` component
-- `MultiSelect`, `TagInput`, `DatePicker` wrappers
-
-All driven by community demand.
+| Priority | Component | Status | Notes |
+|----------|-----------|--------|-------|
+| 1 | `Table` (+ THead, TBody, TRow, TCell) | ✅ Complete | Responsive, striped, hover, bordered |
+| 2 | `Accordion` (+ AccordionItem) | ✅ Complete | Flush, always-open, icons |
+| 3 | `Checkbox` | ✅ Complete | Standard, inline, validation |
+| 4 | `Radio` | ✅ Complete | Standard, button style |
+| 5 | `Switch` | ✅ Complete | Toggle variant of checkbox |
+| 6 | `Range` | ✅ Complete | Slider with labels, steps |
+| 7 | `ListGroup` (+ ListGroupItem) | ✅ Complete | Actionable, badges, flush |
+| 8 | `Collapse` | ✅ Complete | Show/hide with data attributes |
+| 9 | `InputGroup` | ✅ Complete | Prepend/append addons |
+| 10 | `FloatingLabel` | ✅ Complete | Animated label inputs |
 
 ---
 
-## Success Metrics (Updated Dec 2025)
+## Phase 4B – Enhanced Forms & Feedback (v0.4.5 – Complete)
 
-| Metric                    | v0.3.0 (Now)    | v0.4.0 Goal     | v1.0.0 Goal     |
-|---------------------------|-----------------|-----------------|-----------------|
-| Components                | 20              | 30+             | 100+            |
-| Tests                     | 219             | 300+            | 700+            |
-| Coverage                  | 80%             | 90%+            | 95%+            |
-| GitHub Stars              | Growing fast    | 2,000+          | 10,000+         |
-| Monthly PyPI Downloads    | Rising          | 10k+            | 50k+            |
-| Contributors              | 15+             | 50+             | 100+            |
+✅ **38 total components reached**
 
----
+### Components to Build
 
-## How to Contribute Right Now
-
-1. **Pick a Phase 4 component** from the table above
-2. Comment on GitHub Issues → “I’ll build Accordion” → get assigned
-3. Use `src/faststrap/templates/component_template.py` as starting point
-4. Follow [BUILDING_COMPONENTS.md](BUILDING_COMPONENTS.md) exactly
-5. Write 10–15 tests using `to_xml()`
-6. Submit PR → merged in ≤48 hours
-
-Fastest way to get your name in the next release!
+| Priority | Component | Status | Notes |
+|----------|-----------|--------|-------|
+| 1 | `FileInput` | ✅ Complete | Single/multiple, drag-drop preview |
+| 2 | `Tooltip` | ✅ Complete | Bootstrap JS init pattern |
+| 3 | `Popover` | ✅ Complete | Rich content overlays |
+| 4 | `Figure` | ✅ Complete | Image + caption wrapper |
+| 5 | `ConfirmDialog` | ✅ Complete | Modal preset for confirmations |
+| 6 | `EmptyState` | ✅ Complete | Card + Icon + placeholder text |
+| 7 | `StatCard` | ✅ Complete | Metric display card |
+| 8 | `Hero` | ✅ Complete | Landing page hero section |
 
 ---
 
-## Release Schedule (Revised & Realistic)
+## Phase 5 – Layout & Navigation (v0.5.0 – Target Mar 2026)
 
-| Version | Target       | Components | Notes                              |
-|--------|--------------|------------|------------------------------------|
-| 0.3.0  | Dec 12, 2025 | 20         | Complete – Phase 3 shipped!         |
-| 0.4.0  | Jan–Mar 2026 | 28–32      | Phase 4 (Table, Accordion, etc.)   |
-| 0.5.0  | Apr–Jun 2026 | 45–50      | SaaS/dashboard patterns            |
-| 1.0.0  | Aug 2026     | 100+       | Stable, full docs, playground      |
+**Goal:** SaaS-ready layout patterns  
+**Target:** 50 total components
 
-Timelines flex based on community velocity — the more PRs, the faster we ship.
+### Components to Build
+
+| Priority | Component | Status | Owner | Notes |
+|----------|-----------|--------|-------|-------|
+| 1 | `Sidebar` | [ ] Open | — | Collapsible, responsive |
+| 2 | `Footer` | [ ] Open | — | Standard layout component |
+| 3 | `DashboardLayout` | [ ] Open | — | Sidebar + Topbar + Content |
+| 4 | `Timeline` | [ ] Open | — | Activity/event timeline |
+| 5 | `ProfileDropdown` | [ ] Open | — | Dropdown + Avatar pattern |
+| 6 | `SearchBar` | [ ] Open | — | Input + suggestions |
+| 7 | `FeatureCard` | [ ] Open | — | Icon + title + description |
+| 8 | `PricingCard` | [ ] Open | — | Pricing table card |
+| 9 | `Carousel` | [ ] Open | — | Slides, indicators, controls |
+| 10 | `MegaMenu` | [ ] Open | — | Complex dropdown variant |
+| 11 | `NotificationCenter` | [ ] Open | — | Toast stack + dropdown |
+| 12 | `SectionDivider` | [ ] Open | — | Visual content separator |
 
 ---
 
-## Community Feedback Wanted
+## Phase 6 – Data & Advanced (v0.6.0 – Target May 2026) 
+
+**Goal:** Advanced data display and interaction patterns  
+**Target:** 60+ total components
+
+### Components to Build
+
+| Priority | Component | Status | Owner | Notes |
+|----------|-----------|--------|-------|-------|
+| 1 | `DataTable` | [ ] Open | — | Sorting, filtering, pagination |
+| 2 | `TagInput` | [ ] Open | — | Dynamic badge/tag management |
+| 3 | `FormWizard` / `Stepper` | [ ] Open | — | Multi-step form navigation |
+| 4 | `FileUploader` | [ ] Open | — | Drag-drop with preview |
+| 5 | `ChartContainer` | [ ] Open | — | Wrapper for chart libraries |
+| 6 | `ChatBubble` | [ ] Open | — | Message bubble component |
+| 7 | `ChatLayout` | [ ] Open | — | Full chat interface |
+| 8 | `KanbanColumn` | [ ] Open | — | Drag-drop board columns |
+| 9 | `ActivityFeed` | [ ] Open | — | Social-style activity list |
+| 10 | `MediaGallery` | [ ] Open | — | Image/video grid layout |
+
+---
+
+## v1.0.0 – Production Release (Target Aug 2026)
+
+**Goal:** Full Bootstrap parity + SaaS patterns + Documentation  
+**Target:** 100+ components
+
+### Milestones
+
+- [ ] 100+ components
+- [ ] 95%+ test coverage
+- [ ] Full documentation website (MkDocs Material)
+- [ ] Component playground / live demos
+- [ ] 3-5 starter templates (Dashboard, Admin, E-commerce)
+- [ ] Video tutorials
+- [ ] Community contributions from 50+ developers
+
+---
+
+## Success Metrics
+
+| Metric | v0.3.1 | v0.4.5 (Now) | v0.5.0 | v1.0.0 |
+|--------|--------------|--------------|--------|--------|
+| Components | 20 | 38 | 50 | 100+ |
+| Tests | 219 | 230+ | 500+ | 800+ |
+| Coverage | 80% | 85%+ | 90% | 95%+ |
+| Contributors | 15+ | 25+ | 50+ | 100+ |
+
+---
+
+## How to Contribute
+
+1. **Pick a component** from any Phase table above
+2. **Comment on GitHub Issues** → "I'll build [Component]" → get assigned
+3. **Use templates**: `src/faststrap/templates/component_template.py`
+4. **Follow guides**: [BUILDING_COMPONENTS.md](BUILDING_COMPONENTS.md)
+5. **Write tests**: 10-15 tests per component using `to_xml()`
+6. **Submit PR** → merged in ≤48 hours
+
+---
+
+## Documentation Website (In Progress)
+
+**Stack:** MkDocs Material + GitHub Pages
+
+**Structure:**
+- Getting Started (Installation, Quick Start)
+- Component Reference (Forms, Display, Feedback, Navigation, Layout)
+- Theming Guide (Built-in themes, Custom themes, Dark mode)
+- HTMX Integration Guide
+- API Reference
+
+---
+
+## Community Feedback
 
 Tell us what you need most:
-- Reply in [Discussions](https://github.com/Evayoung/Faststrap/discussions)
-- Vote on issues with thumbs up
-- Join FastHTML Discord → #faststrap channel
+- [GitHub Discussions](https://github.com/Faststrap-org/Faststrap/discussions)
+- Vote on issues with 👍
+- [FastHTML Discord](https://discord.gg/qcXvcxMhdP) → #faststrap channel
 
-Your vote directly influences what gets built next.
+Your votes directly influence what gets built next.
 
 ---
 
-**Last Updated: December 12, 2025**  
-**Current Version: 0.3.0 (20 components live)**
+**Last Updated: February 2026**  
+**Current Version: 0.4.5 (38 components live)**
 
-**Let’s build the definitive UI library for FastHTML — together.**
-
-Claim a component today → become a core contributor tomorrow!
+**Let's build the definitive UI library for FastHTML — together.**

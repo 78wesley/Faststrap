@@ -1,30 +1,31 @@
 """Bootstrap Input component for text form controls."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import Div, Label, Small
 from fasthtml.common import Input as FTInput
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
+from ...core.types import InputType, SizeType
 from ...utils.attrs import convert_attrs
-
-InputType = Literal["text", "email", "password", "number", "tel", "url", "search", "date", "time"]
-SizeType = Literal["sm", "lg"]
 
 
 def Input(
     name: str,
-    input_type: InputType = "text",
+    input_type: InputType | None = None,
     placeholder: str | None = None,
     value: str | None = None,
     label: str | None = None,
     help_text: str | None = None,
     size: SizeType | None = None,
-    disabled: bool = False,
-    readonly: bool = False,
-    required: bool = False,
+    disabled: bool | None = None,
+    readonly: bool | None = None,
+    required: bool | None = None,
     **kwargs: Any,
-) -> Div:  # Div | FTInput
+) -> Div:
     """Bootstrap Input component for text form controls.
 
     Args:
@@ -32,72 +33,37 @@ def Input(
         input_type: HTML input type
         placeholder: Placeholder text
         value: Initial value
-        label: Label text (if provided, wraps input in div)
+        label: Label text
         help_text: Helper text below input
         size: Input size (sm, lg)
         disabled: Whether input is disabled
         readonly: Whether input is readonly
         required: Whether input is required
-        **kwargs: Additional HTML attributes (cls, id, hx-*, data-*, etc.)
-
-    Returns:
-        Div with label/input/help or just Input element
-
-    Example:
-        Simple input:
-        >>> Input("email", input_type="email", placeholder="Enter email")
-
-        With label and validation:
-        >>> Input(
-        ...     "username",
-        ...     label="Username",
-        ...     help_text="Choose a unique username",
-        ...     required=True,
-        ...     placeholder="johndoe"
-        ... )
-
-        With HTMX validation:
-        >>> Input(
-        ...     "email",
-        ...     input_type="email",
-        ...     label="Email Address",
-        ...     hx_post="/validate/email",
-        ...     hx_trigger="blur",
-        ...     hx_target="#email-feedback"
-        ... )
-
-        Password with size:
-        >>> Input(
-        ...     "password",
-        ...     input_type="password",
-        ...     label="Password",
-        ...     size="lg",
-        ...     required=True
-        ... )
-
-        Disabled readonly input:
-        >>> Input(
-        ...     "readonly_field",
-        ...     value="Cannot edit",
-        ...     readonly=True,
-        ...     disabled=True
-        ... )
-
-    Note:
-        - If label is provided, input is wrapped in Div with proper accessibility
-        - Help text automatically links via aria-describedby
-        - Required fields show asterisk (*) in label
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/forms/form-control/
+        **kwargs: Additional HTML attributes
     """
-    # Ensure ID is present for label linkage (defaults to name)
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Input",
+        input_type=input_type,
+        size=size,
+        disabled=disabled,
+        readonly=readonly,
+        required=required
+    )
+    
+    c_type = cfg.get("input_type", "text")
+    c_size = cfg.get("size")
+    c_disabled = cfg.get("disabled", False)
+    c_readonly = cfg.get("readonly", False)
+    c_required = cfg.get("required", False)
+
+    # Ensure ID is present for label linkage
     input_id = kwargs.pop("id", name)
 
     # Build input classes
     input_classes = ["form-control"]
-    if size:
-        input_classes.append(f"form-control-{size}")
+    if c_size:
+        input_classes.append(f"form-control-{c_size}")
 
     user_cls = kwargs.pop("cls", "")
     input_cls = merge_classes(" ".join(input_classes), user_cls)
@@ -105,31 +71,27 @@ def Input(
     # Build attributes
     attrs: dict[str, Any] = {
         "cls": input_cls,
-        "type": input_type,
+        "type": c_type,
         "name": name,
         "id": input_id,
     }
 
     if placeholder:
         attrs["placeholder"] = placeholder
-
     if value:
         attrs["value"] = value
-
-    if disabled:
+    if c_disabled:
         attrs["disabled"] = True
-
-    if readonly:
+    if c_readonly:
         attrs["readonly"] = True
-
-    if required:
+    if c_required:
         attrs["required"] = True
 
-    # ARIA for help text (must be applied BEFORE convert_attrs)
+    # ARIA for help text
     if help_text:
         attrs["aria_describedby"] = f"{name}-help"
 
-    # Convert remaining kwargs (HTMX, data-*, etc.)
+    # Convert remaining kwargs
     attrs.update(convert_attrs(kwargs))
 
     # Create input element
@@ -146,7 +108,7 @@ def Input(
         label_elem = Label(
             label,
             " ",
-            Small("*", cls="text-danger") if required else "",
+            Small("*", cls="text-danger") if c_required else "",
             **{"for": input_id},
             cls="form-label",
         )

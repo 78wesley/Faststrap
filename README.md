@@ -6,7 +6,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastHTML](https://img.shields.io/badge/FastHTML-0.6+-green.svg)](https://fastht.ml/)
 [![PyPI version](https://img.shields.io/pypi/v/faststrap.svg)](https://pypi.org/project/faststrap/)
-[![Tests](https://github.com/Evayoung/Faststrap/workflows/Tests/badge.svg)](https://github.com/Evayoung/Faststrap/actions)
+[![Tests](https://github.com/Faststrap-org/Faststrap/workflows/Tests/badge.svg)](https://github.com/Faststrap-org/Faststrap/actions)
 
 ---
 
@@ -21,6 +21,7 @@ FastHTML is amazing for building web apps in pure Python, but it lacks pre-built
 ✅ **Dark mode built-in** - Automatic theme switching  
 ✅ **Type-safe** - Full type hints for better IDE support  
 ✅ **Pythonic API** - Intuitive kwargs style
+✅ **Enhanced customization** - Slot classes, CSS variables, themes, and more
 
 ---
 
@@ -36,10 +37,13 @@ pip install faststrap
 
 ```python
 from fasthtml.common import FastHTML, serve
-from faststrap import add_bootstrap, Card, Button
+from faststrap import add_bootstrap, Card, Button, create_theme
 
 app = FastHTML()
-add_bootstrap(app, theme="dark")
+
+# Use built-in theme or create custom
+theme = create_theme(primary="#7BA05B", secondary="#48C774")
+add_bootstrap(app, theme=theme, theme="dark")
 
 @app.route("/")
 def home():
@@ -56,7 +60,170 @@ That's it! You now have a modern, responsive web app with zero JavaScript.
 
 ---
 
-## Available Components (20 Total)
+## Enhanced Features
+
+### 1. Enhanced Attribute Handling
+
+Faststrap now supports advanced attribute handling:
+
+```python
+from faststrap import Button
+
+# Style dict and CSS variables
+Button(
+    "Styled Button",
+    style={"background-color": "#7BA05B", "border": "none"},
+    css_vars={"--bs-btn-padding-y": "0.75rem", "--bs-btn-border-radius": "12px"},
+    data={"id": "123", "type": "demo"},
+    aria={"label": "Styled button"},
+)
+
+# Filter None/False values automatically
+Button("Test", disabled=None, hidden=False)  # None/False values are dropped
+```
+
+### 2. CloseButton Helper
+
+Reusable close button for alerts, modals, and drawers:
+
+```python
+from faststrap import CloseButton, Alert
+
+# Use in alerts
+Alert(
+    "This alert uses CloseButton helper",
+    variant="info",
+    dismissible=True,
+)
+
+# Use in modals/drawers (automatically used)
+```
+
+### 3. Expanded Button Component
+
+More control over button appearance and behavior:
+
+```python
+from faststrap import Button
+
+# Render as link
+Button("As Link", as_="a", href="/page", variant="secondary")
+
+# Loading states with custom text
+Button("Loading", loading=True, loading_text="Please wait...", spinner=True)
+
+# Full width, pill, active states
+Button("Full Width", full_width=True, variant="info")
+Button("Pill", pill=True, variant="warning")
+Button("Active", active=True, variant="success")
+
+# Icon and spinner control
+Button("Icon + Spinner", icon="check-circle", spinner=True, icon_pos="start")
+```
+
+### 4. Slot Class Overrides
+
+Fine-grained control over component parts:
+
+```python
+from faststrap import Card, Modal, Drawer, Dropdown
+
+# Card with custom slot classes
+Card(
+    "Content",
+    header="Custom Header",
+    footer="Custom Footer",
+    header_cls="bg-primary text-white p-3",
+    body_cls="p-4",
+    footer_cls="text-muted",
+)
+
+# Modal with custom classes
+Modal(
+    "Modal content",
+    title="Custom Modal",
+    dialog_cls="shadow-lg",
+    content_cls="border-0",
+    header_cls="bg-primary text-white",
+    body_cls="p-4",
+)
+
+# Drawer with custom classes
+Drawer(
+    "Drawer content",
+    title="Custom Drawer",
+    header_cls="bg-success text-white",
+    body_cls="p-4",
+)
+
+# Dropdown with custom classes
+Dropdown(
+    "Option 1", "Option 2",
+    label="Custom Dropdown",
+    toggle_cls="custom-toggle",
+    menu_cls="custom-menu",
+    item_cls="custom-item",
+)
+```
+
+### 5. Theme System
+
+Create and apply custom themes:
+
+```python
+from faststrap import create_theme, add_bootstrap
+
+# Create custom theme
+my_theme = create_theme(
+    primary="#7BA05B",
+    secondary="#48C774",
+    info="#36A3EB",
+    warning="#FFC107",
+    danger="#DC3545",
+    success="#28A745",
+    light="#F8F9FA",
+    dark="#343A40",
+)
+
+# Use built-in themes
+add_bootstrap(app, theme="green-nature")  # or "blue-ocean", "dark-mode", etc.
+
+# Or use custom theme
+add_bootstrap(app, theme=my_theme)
+```
+
+Available built-in themes:
+- `green-nature`
+- `blue-ocean`
+- `purple-magic`
+- `red-alert`
+- `orange-sunset`
+- `teal-oasis`
+- `indigo-night`
+- `pink-love`
+- `cyan-sky`
+- `gray-mist`
+- `dark-mode`
+- `light-mode`
+
+### 6. Registry Metadata
+
+Components now include metadata about JavaScript requirements:
+
+```python
+from faststrap.core.registry import list_components, get_component
+
+# List all components
+components = list_components()
+
+# Check if component requires JS
+modal = get_component("Modal")
+# Modal is registered with requires_js=True
+```
+
+---
+
+## Available Components (38 Total)
 
 ### ✅ Phase 1+2 (v0.1.0 - v0.2.2) - 12 Components
 
@@ -74,29 +241,57 @@ That's it! You now have a modern, responsive web app with zero JavaScript.
 | **Container/Row/Col** | Bootstrap grid system | ✅ |
 | **Icon** | Bootstrap Icons helper | ✅ |
 
-### ✅ Phase 3 (v0.3.0 - Released!) - 8 New Components
+### ✅ Phase 3 (v0.3.0) - 8 New Components
 
 | Component | Description | Status |
 |-----------|-------------|--------|
-| **Tabs** | Navigation tabs and pills | ✅ NEW |
-| **Dropdown** | Contextual menus with split buttons | ✅ NEW |
-| **Input** | Text form controls with validation | ✅ NEW |
-| **Select** | Dropdown selections (single/multiple) | ✅ NEW |
-| **Breadcrumb** | Navigation trail with icons | ✅ NEW |
-| **Pagination** | Page navigation with customization | ✅ NEW |
-| **Spinner** | Loading indicators (border/grow) | ✅ NEW |
-| **Progress** | Progress bars with animations | ✅ NEW |
+| **Tabs** | Navigation tabs and pills | ✅ |
+| **Dropdown** | Contextual menus with split buttons | ✅ |
+| **Input** | Text form controls with validation | ✅ |
+| **Select** | Dropdown selections (single/multiple) | ✅ |
+| **Breadcrumb** | Navigation trail with icons | ✅ |
+| **Pagination** | Page navigation with customization | ✅ |
+| **Spinner** | Loading indicators (border/grow) | ✅ |
+| **Progress** | Progress bars with animations | ✅ |
 
-### 🚧 Phase 4 (v0.4.0 - Planned Q2 2026)
+### ✅ Phase 4A (v0.4.0) - 10 Components
 
-- **Table** - Responsive data tables
-- **Accordion** - Collapsible panels
-- **Carousel** - Image sliders
-- **ListGroup** - Versatile lists
-- **Tooltip** - Contextual hints
-- **Popover** - Rich overlays
-- **Checkbox/Radio/Range** - Form controls
-- **FileInput** - File uploads
+| Component | Description | Status |
+|-----------|-------------|--------|
+| **Table** | Responsive data tables | ✅ |
+| **Accordion** | Collapsible panels | ✅ |
+| **Checkbox** | Checkbox form controls | ✅ |
+| **Radio** | Radio button controls | ✅ |
+| **Switch** | Toggle switch variant | ✅ |
+| **Range** | Slider input control | ✅ |
+| **ListGroup** | Versatile lists | ✅ |
+| **Collapse** | Show/hide content | ✅ |
+| **InputGroup** | Prepend/append addons | ✅ |
+| **FloatingLabel** | Animated label inputs | ✅ |
+
+### ✅ Phase 4B (v0.4.5) - 8 Components
+
+| Component | Description | Status |
+|-----------|-------------|--------|
+| **FileInput** | File uploads with preview | ✅ |
+| **Tooltip** | Contextual hints | ✅ |
+| **Popover** | Rich overlays | ✅ |
+| **Figure** | Image + caption | ✅ |
+| **ConfirmDialog** | Modal confirmation preset | ✅ |
+| **EmptyState** | Placeholder component | ✅ |
+| **StatCard** | Metric display card | ✅ |
+| **Hero** | Landing page hero section | ✅ |
+
+### 🗓️ Phase 5+ (v0.5.0 - v1.0.0)
+
+- **Sidebar**, **Footer**, **DashboardLayout**
+- **DataTable** with sorting/filtering/pagination
+- **FormWizard**, **Stepper**
+- **Timeline**, **ProfileDropdown**, **SearchBar**
+- **Carousel**, **MegaMenu**, **NotificationCenter**
+- And 40+ more components...
+
+**Target: 100+ components by v1.0.0 (Aug 2025)**
 
 See [ROADMAP.md](ROADMAP.md) for complete timeline.
 
@@ -108,7 +303,7 @@ See [ROADMAP.md](ROADMAP.md) for complete timeline.
 
 ```python
 from fasthtml.common import FastHTML
-from faststrap import add_bootstrap
+from faststrap import add_bootstrap, create_theme
 
 app = FastHTML()
 
@@ -118,8 +313,9 @@ add_bootstrap(app)
 # With dark theme
 add_bootstrap(app, theme="dark")
 
-# Custom favicon
-add_bootstrap(app, theme="dark", favicon_url="/static/logo.svg")
+# Custom theme
+theme = create_theme(primary="#7BA05B", secondary="#48C774")
+add_bootstrap(app, theme=theme)
 
 # Using CDN
 add_bootstrap(app, use_cdn=True)
@@ -292,7 +488,8 @@ faststrap/
 │   ├── core/
 │   │   ├── assets.py            # Bootstrap injection + favicon
 │   │   ├── base.py              # Component base classes
-│   │   └── registry.py          # Component registry
+│   │   ├── registry.py          # Component registry
+│   │   └── theme.py             # Theme system
 │   ├── components/
 │   │   ├── forms/               # Button, Input, Select
 │   │   ├── display/             # Card, Badge
@@ -313,6 +510,7 @@ faststrap/
 │       └── attrs.py             # Centralized attribute conversion
 ├── tests/                       # 219 tests (80% coverage)
 ├── examples/                    # Demo applications
+│   └── demo_all.py              # Comprehensive demo
 └── docs/                        # Documentation
 ```
 
@@ -330,7 +528,7 @@ faststrap/
 
 ```bash
 # Clone repository
-git clone https://github.com/Evayoung/Faststrap.git
+git clone https://github.com/Faststrap-org/Faststrap.git
 cd Faststrap
 
 # Create virtual environment
@@ -381,22 +579,34 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Roadmap
 
-### v0.3.0 (Current - Released Dec 2024)
+### v0.3.1 (Current - December 2025)
 - ✅ 20 components (12 + 8 new)
 - ✅ 219 tests, 80% coverage
-- ✅ Centralized convert_attrs() utility
+- ✅ Centralized `convert_attrs()` utility
 - ✅ Default FastStrap favicon
 - ✅ Full HTMX integration
+- ✅ Enhanced customization (slot classes, CSS vars, themes)
+- ✅ Component defaults system with `resolve_defaults()`
 
-### v0.4.0 (Q2 2025)
-- Table, Accordion, Carousel, ListGroup
-- Tooltip, Popover
-- Checkbox, Radio, Range, FileInput
-- 28+ components total
+### v0.4.0 (Phase 4A - Complete)
+- ✅ Table, Accordion, Checkbox, Radio, Switch
+- ✅ Range, ListGroup, Collapse, InputGroup, FloatingLabel
+- ✅ 30 components total
 
-### v1.0.0 (Q4 2025)
-- 50+ components
+### v0.4.5 (Phase 4B - Complete)
+- ✅ FileInput, Tooltip, Popover, Figure
+- ✅ ConfirmDialog, EmptyState, StatCard, Hero
+- ✅ 38 components total
+
+### v0.5.0 (Phase 5 - Mar 2025)
+- Sidebar, Footer, DashboardLayout
+- Timeline, Carousel, MegaMenu
+- 50 components total
+
+### v1.0.0 (Target Aug 2025)
+- 100+ components
 - Component playground
+- Full documentation website
 - Video tutorials
 - Production ready
 
@@ -404,23 +614,22 @@ See [ROADMAP.md](ROADMAP.md) for complete timeline.
 
 ---
 
-## Support
+## Stats
 
-- 📖 **Documentation**: [GitHub README](https://github.com/Evayoung/Faststrap#readme)
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Evayoung/Faststrap/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/Evayoung/Faststrap/discussions)
-- 🎮 **Discord**: [FastHTML Community](https://discord.gg/qcXvcxMhdP)
+- **38 components** across 5 categories
+- **219+ passing tests**
+- **Zero custom JavaScript** required
+- **Full HTMX integration**
+- **Enhanced customization** with slot classes, CSS variables, and themes
 
 ---
 
-## Stats
+## Support
 
-- **20 components** across 5 categories
-- **219 passing tests** (80% coverage)
-- **Bootstrap 5.3.3** compliant
-- **Python 3.10+** with modern type hints
-- **Zero custom JavaScript** required
-- **Full HTMX integration**
+- 📖 **Documentation**: [GitHub README](https://github.com/Faststrap-org/Faststrap#readme)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Faststrap-org/Faststrap/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/Faststrap-org/Faststrap/discussions)
+- 🎮 **Discord**: [FastHTML Community](https://discord.gg/qcXvcxMhdP)
 
 ---
 

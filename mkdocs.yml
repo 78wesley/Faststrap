@@ -1,0 +1,98 @@
+site_name: FastStrap
+site_description: "Modern Bootstrap 5 components for FastHTML. Build beautiful web UIs in pure Python with zero JavaScript knowledge."
+site_author: "FastStrap Contributors"
+repo_url: "https://github.com/Faststrap-org/Faststrap"
+repo_name: "Faststrap-org/Faststrap"
+edit_uri: "edit/main/docs/"
+
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  palette:
+    # Light mode
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+extra_css:
+  - stylesheets/extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: true
+            import_identifier: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - Customization: getting-started/customization.md
+  - Components:
+    - Forms:
+      - Button: components/forms/button.md
+      - Input: components/forms/input.md
+      - Checkbox & Switch: components/forms/checks.md
+      - FileInput: components/forms/file-input.md
+    - Display:
+      - Card: components/display/card.md
+      - Table: components/display/table.md
+      - Figure: components/display/figure.md
+      - Badge: components/display/badge.md
+      - Empty State: components/display/empty_state.md
+      - Stat Card: components/display/stat_card.md
+    - Feedback:
+      - Alert: components/feedback/alert.md
+      - Modal: components/feedback/modal.md
+      - Toast: components/feedback/toast.md
+      - Tooltip & Popover: components/feedback/overlays.md
+    - Navigation:
+      - Navbar: components/navigation/navbar.md
+      - Tabs: components/navigation/tabs.md
+    - Layout:
+      - Grid: components/layout/grid.md
+      - Hero: components/layout/hero.md
+  - Showcase:
+    - Portfolios: showcase/portfolios.md
+    - SaaS Landing: showcase/saas-landing.md
+    - Admin Dashboard: showcase/admin-dashboard.md
+  - API Reference:
+    - Core: api/core.md

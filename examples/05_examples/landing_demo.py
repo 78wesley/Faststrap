@@ -236,7 +236,7 @@ def landing():
                     ),
                     Div(
                         Icon("github", cls="text-primary fs-2 mb-2"),
-                        P("github.com/Evayoung", cls="fw-bold"),
+                        P("github.com/Faststrap-org", cls="fw-bold"),
                         cls="text-center col-md-4 mb-4",
                     ),
                     cls="row justify-content-center",

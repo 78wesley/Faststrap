@@ -1,27 +1,38 @@
 """Bootstrap Modal component for dialog boxes."""
 
+from __future__ import annotations
+
 from typing import Any, Literal
 
 from fasthtml.common import H5, Button, Div
 
 from ...core.base import merge_classes
+from ...core.registry import register
+from ...core.theme import resolve_defaults
+from ...core.types import SizeType
+from ..forms.button import CloseButton
 from ...utils.attrs import convert_attrs
 
-SizeType = Literal["sm", "lg", "xl"]
 
-
-# @register(category="feedback", requires_js=True)
+@register(category="feedback", requires_js=True)
 def Modal(
     *children: Any,
-    modal_id: str,  # Using modal_id to avoid conflict
+    modal_id: str | None = None,
     title: str | None = None,
     footer: Any | None = None,
     size: SizeType | None = None,
-    centered: bool = False,
-    scrollable: bool = False,
-    fullscreen: bool | Literal["sm-down", "md-down", "lg-down", "xl-down", "xxl-down"] = False,
-    static_backdrop: bool = False,
-    fade: bool = True,
+    centered: bool | None = None,
+    scrollable: bool | None = None,
+    fullscreen: bool | Literal["sm-down", "md-down", "lg-down", "xl-down", "xxl-down"] | None = None,
+    static_backdrop: bool | None = None,
+    fade: bool | None = None,
+    dialog_cls: str | None = None,
+    content_cls: str | None = None,
+    header_cls: str | None = None,
+    body_cls: str | None = None,
+    footer_cls: str | None = None,
+    title_cls: str | None = None,
+    close_cls: str | None = None,
     **kwargs: Any,
 ) -> Div:
     """Bootstrap Modal component for dialog boxes and overlays.
@@ -30,89 +41,76 @@ def Modal(
         *children: Modal body content
         modal_id: Unique ID for the modal (required for Bootstrap JS)
         title: Modal header title
-        footer: Modal footer content (buttons, text, etc.)
+        footer: Modal footer content
         size: Modal size (sm, lg, xl)
         centered: Vertically center modal
         scrollable: Make modal body scrollable
-        fullscreen: Full-screen modal (True or breakpoint like "md-down")
+        fullscreen: Full-screen modal
         static_backdrop: Clicking backdrop doesn't close modal
+        fade: Use fade animation
         **kwargs: Additional HTML attributes (cls, hx-*, data-*, etc.)
-
-    Returns:
-        FastHTML Div element with modal structure
-
-    Example:
-        Basic modal:
-        >>> Modal(
-        ...     P("Are you sure you want to delete this?"),
-        ...     modal_id="deleteModal",
-        ...     title="Confirm Delete",
-        ...     footer=Div(
-        ...         Button("Cancel", variant="secondary", data_bs_dismiss="modal"),
-        ...         Button("Delete", variant="danger")
-        ...     )
-        ... )
-
-        Large centered modal:
-        >>> Modal(
-        ...     "Modal content here",
-        ...     modal_id="largeModal",
-        ...     title="Large Modal",
-        ...     size="lg",
-        ...     centered=True
-        ... )
-
-        Scrollable modal:
-        >>> Modal(
-        ...     "Very long content...",
-        ...     modal_id="scrollModal",
-        ...     title="Scrollable",
-        ...     scrollable=True
-        ... )
-
-        Full-screen on mobile:
-        >>> Modal(
-        ...     "Content",
-        ...     modal_id="fullModal",
-        ...     title="Full Screen",
-        ...     fullscreen="md-down"
-        ... )
-
-    Note:
-        To trigger a modal, use Bootstrap's data attributes:
-        >>> Button("Open Modal", data_bs_toggle="modal", data_bs_target="#deleteModal")
-
-        Or use HTMX to load modal content dynamically:
-        >>> Button("Load Modal", hx_get="/modal-content", hx_target="#modalContainer")
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/modal/
     """
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Modal",
+        size=size,
+        centered=centered,
+        scrollable=scrollable,
+        fullscreen=fullscreen,
+        static_backdrop=static_backdrop,
+        fade=fade,
+        dialog_cls=dialog_cls,
+        content_cls=content_cls,
+        header_cls=header_cls,
+        body_cls=body_cls,
+        footer_cls=footer_cls,
+        title_cls=title_cls,
+        close_cls=close_cls
+    )
+    
+    c_size = cfg.get("size")
+    c_centered = cfg.get("centered", False)
+    c_scrollable = cfg.get("scrollable", False)
+    c_fullscreen = cfg.get("fullscreen", False)
+    c_static_backdrop = cfg.get("static_backdrop", False)
+    c_fade = cfg.get("fade", True)
+    c_dialog_cls = cfg.get("dialog_cls", "")
+    c_content_cls = cfg.get("content_cls", "")
+    c_header_cls = cfg.get("header_cls", "")
+    c_body_cls = cfg.get("body_cls", "")
+    c_footer_cls = cfg.get("footer_cls", "")
+    c_title_cls = cfg.get("title_cls", "")
+    c_close_cls = cfg.get("close_cls", "")
+
+    # Ensure modal id
+    if modal_id is None:
+        from uuid import uuid4
+        modal_id = f"modal-{uuid4().hex}"
+
     # Build modal dialog classes
     dialog_classes = ["modal-dialog"]
-
-    if size:
-        dialog_classes.append(f"modal-{size}")
-
-    if centered:
+    if c_size:
+        dialog_classes.append(f"modal-{c_size}")
+    if c_centered:
         dialog_classes.append("modal-dialog-centered")
-
-    if scrollable:
+    if c_scrollable:
         dialog_classes.append("modal-dialog-scrollable")
-
-    if fullscreen:
-        if fullscreen is True:
+    if c_fullscreen:
+        if c_fullscreen is True:
             dialog_classes.append("modal-fullscreen")
         else:
-            dialog_classes.append(f"modal-fullscreen-{fullscreen}")
+            dialog_classes.append(f"modal-fullscreen-{c_fullscreen}")
 
     # Build modal attributes
     modal_classes = ["modal"]
-    if fade:
+    if c_fade:
         modal_classes.append("fade")
 
     user_cls = kwargs.pop("cls", "")
     all_modal_classes = merge_classes(" ".join(modal_classes), user_cls)
+
+    # Prevent accidental conflict with our explicit id
+    kwargs.pop("id", None)
 
     attrs: dict[str, Any] = {
         "cls": all_modal_classes,
@@ -122,13 +120,12 @@ def Modal(
     }
 
     # Static backdrop
-    if static_backdrop:
+    if c_static_backdrop:
         attrs["data_bs_backdrop"] = "static"
         attrs["data_bs_keyboard"] = "false"
 
-    # Convert remaining kwargs (excluding modal_id)
-    converted_kwargs = convert_attrs({k: v for k, v in kwargs.items() if k != "modal_id"})
-    attrs.update(converted_kwargs)
+    # Convert remaining kwargs
+    attrs.update(convert_attrs(kwargs))
 
     # Build modal structure
     content_parts = []
@@ -136,32 +133,23 @@ def Modal(
     # Header
     if title:
         header = Div(
-            H5(title, cls="modal-title", id=f"{modal_id}Label"),
-            Button(
-                type="button",
-                cls="btn-close",
-                data_bs_dismiss="modal",
-                aria_label="Close",
-            ),
-            cls="modal-header",
+            H5(title, cls=merge_classes("modal-title", c_title_cls), id=f"{modal_id}Label"),
+            CloseButton(cls=c_close_cls, data_bs_dismiss="modal"),
+            cls=merge_classes("modal-header", c_header_cls),
         )
         content_parts.append(header)
 
     # Body
-    body = Div(*children, cls="modal-body")
+    body = Div(*children, cls=merge_classes("modal-body", c_body_cls))
     content_parts.append(body)
 
     # Footer
     if footer:
-        footer_div = Div(footer, cls="modal-footer")
+        footer_div = Div(footer, cls=merge_classes("modal-footer", c_footer_cls))
         content_parts.append(footer_div)
 
     # Assemble modal
-    modal_content = Div(*content_parts, cls="modal-content")
-    modal_dialog = Div(modal_content, cls=" ".join(dialog_classes))
-
-    # Assemble modal
-    modal_content = Div(*content_parts, cls="modal-content")
-    modal_dialog = Div(modal_content, cls=" ".join(dialog_classes))
+    modal_content = Div(*content_parts, cls=merge_classes("modal-content", c_content_cls))
+    modal_dialog = Div(modal_content, cls=merge_classes(" ".join(dialog_classes), c_dialog_cls))
 
     return Div(modal_dialog, id=modal_id, **attrs)

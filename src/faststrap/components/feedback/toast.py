@@ -1,97 +1,133 @@
 """Bootstrap Toast component for temporary notifications."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import Button, Div, Strong
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
+from ...core.types import VariantType, ToastPositionType
 from ...utils.attrs import convert_attrs
 
-VariantType = Literal[
-    "primary",
-    "secondary",
-    "success",
-    "danger",
-    "warning",
-    "info",
-    "light",
-    "dark",
-]
+
+def SimpleToast(
+    *children: Any,
+    title: str | None = None,
+    variant: VariantType | None = None,
+    duration: int | None = None,
+    position: ToastPositionType | None = None,
+    **kwargs: Any,
+) -> Div:
+    """Simple Toast component that works without JavaScript."""
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "SimpleToast",
+        variant=variant,
+        duration=duration,
+        position=position
+    )
+    
+    c_variant = cfg.get("variant", "info")
+    c_duration = cfg.get("duration", 5)
+    c_position = cfg.get("position", "top-right")
+
+    # Build base classes
+    classes = ["alert", f"alert-{c_variant}", "alert-dismissible", "fade", "show"]
+    
+    # Position classes for fixed overlay
+    position_classes = {
+        "top-right": "position-fixed top-0 end-0 m-3",
+        "top-left": "position-fixed top-0 start-0 m-3",
+        "bottom-right": "position-fixed bottom-0 end-0 m-3",
+        "bottom-left": "position-fixed bottom-0 start-0 m-3",
+        "top-center": "position-fixed top-0 start-50 translate-middle-x m-3",
+        "bottom-center": "position-fixed bottom-0 start-50 translate-middle-x m-3",
+    }
+    
+    classes.append(position_classes.get(c_position, position_classes["top-right"]))
+    
+    # Merge with user classes
+    user_cls = kwargs.pop("cls", "")
+    all_classes = merge_classes(" ".join(classes), user_cls)
+    
+    # Build attributes
+    attrs: dict[str, Any] = {
+        "cls": all_classes,
+        "role": "alert",
+        "style": "z-index: 9999; max-width: 400px;",
+    }
+    
+    # Add CSS for auto-hide
+    if c_duration > 0:
+        style = f"animation: toastFadeOut {c_duration}s ease-in-out {c_duration}s forwards;"
+        existing_style = attrs.get("style", "")
+        if existing_style:
+            attrs["style"] = f"{existing_style}; {style}"
+        else:
+            attrs["style"] = style
+    
+    # Convert remaining kwargs
+    attrs.update(convert_attrs(kwargs))
+    
+    # Build toast structure
+    parts = []
+    
+    if title:
+        header = Div(
+            Strong(title, cls="me-auto"),
+            Button(
+                "×",
+                type="button",
+                cls="btn-close",
+                aria_label="Close",
+                **{k: v for k, v in attrs.items() if k not in ["cls", "role", "style"]}
+            ),
+            cls="alert-heading"
+        )
+        parts.append(header)
+    
+    body = Div(*children, cls="mb-0")
+    parts.append(body)
+    
+    return Div(*parts, **attrs)
 
 
 def Toast(
     *children: Any,
     title: str | None = None,
     variant: VariantType | None = None,
-    autohide: bool = True,
-    delay: int = 5000,
-    animation: bool = True,
+    autohide: bool | None = None,
+    delay: int | None = None,
+    animation: bool | None = None,
     **kwargs: Any,
 ) -> Div:
-    """Bootstrap Toast component for temporary notifications.
+    """Bootstrap Toast component for temporary notifications."""
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Toast",
+        variant=variant,
+        autohide=autohide,
+        delay=delay,
+        animation=animation
+    )
+    
+    c_variant = cfg.get("variant")
+    c_autohide = cfg.get("autohide", True)
+    c_delay = cfg.get("delay", 5000)
+    c_animation = cfg.get("animation", True)
 
-    Args:
-        *children: Toast body content
-        title: Toast header title
-        variant: Bootstrap color variant (applies background color)
-        autohide: Automatically hide toast after delay
-        delay: Auto-hide delay in milliseconds (default: 5000ms / 5s)
-        animation: Enable fade animation
-        **kwargs: Additional HTML attributes (cls, id, hx-*, data-*, etc.)
-
-    Returns:
-        FastHTML Div element with toast structure
-
-    Example:
-        Basic toast:
-        >>> Toast("Operation successful!", title="Success")
-
-        With variant color:
-        >>> Toast(
-        ...     "Your changes were saved.",
-        ...     title="Saved",
-        ...     variant="success"
-        ... )
-
-        No auto-hide:
-        >>> Toast(
-        ...     "Important message - stays visible",
-        ...     title="Notice",
-        ...     autohide=False
-        ... )
-
-        Custom delay:
-        >>> Toast(
-        ...     "Quick notification",
-        ...     title="Alert",
-        ...     delay=2000  # 2 seconds
-        ... )
-
-    Note:
-        Toasts require Bootstrap's JavaScript to work.
-
-        To show a toast programmatically:
-        - Add it to the page (hidden by default)
-        - Use Bootstrap's Toast API: `toast.show()` via JavaScript
-
-        Or use HTMX to dynamically add toasts:
-        >>> Button("Show Toast", hx_get="/toast", hx_target="#toast-container")
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/toasts/
-    """
     # Build base classes
     classes = ["toast"]
-
-    # Add variant background if specified
-    if variant:
-        classes.append(f"text-bg-{variant}")
+    if c_variant:
+        classes.append(f"text-bg-{c_variant}")
 
     # Merge with user classes
     user_cls = kwargs.pop("cls", "")
     all_classes = merge_classes(" ".join(classes), user_cls)
 
-    # Build data attributes for Bootstrap JS
+    # Build attributes
     attrs: dict[str, Any] = {
         "cls": all_classes,
         "role": "alert",
@@ -100,13 +136,13 @@ def Toast(
     }
 
     # Bootstrap toast data attributes
-    if autohide:
+    if c_autohide:
         attrs["data-bs-autohide"] = "true"
-        attrs["data-bs-delay"] = str(delay)
+        attrs["data-bs-delay"] = str(c_delay)
     else:
         attrs["data-bs-autohide"] = "false"
 
-    if animation:
+    if c_animation:
         attrs["data-bs-animation"] = "true"
 
     # Convert remaining kwargs
@@ -115,7 +151,6 @@ def Toast(
     # Build toast structure
     parts = []
 
-    # Add header if title provided
     if title:
         header = Div(
             Strong(title, cls="me-auto"),
@@ -129,7 +164,6 @@ def Toast(
         )
         parts.append(header)
 
-    # Add body
     body = Div(*children, cls="toast-body")
     parts.append(body)
 
@@ -138,48 +172,17 @@ def Toast(
 
 def ToastContainer(
     *toasts: Any,
-    position: Literal[
-        "top-start",
-        "top-center",
-        "top-end",
-        "middle-start",
-        "middle-center",
-        "middle-end",
-        "bottom-start",
-        "bottom-center",
-        "bottom-end",
-    ] = "top-end",
+    position: ToastPositionType | None = None,
     **kwargs: Any,
 ) -> Div:
-    """Container for positioning toasts on the page.
+    """Container for positioning toasts on the page."""
+    # Resolve API defaults
+    cfg = resolve_defaults("ToastContainer", position=position)
+    c_position = cfg.get("position", "top-end")
 
-    Args:
-        *toasts: Toast components to display
-        position: Toast position on screen
-        **kwargs: Additional HTML attributes
-
-    Returns:
-        FastHTML Div element positioned for toasts
-
-    Example:
-        >>> ToastContainer(
-        ...     Toast("Message 1", title="Alert 1"),
-        ...     Toast("Message 2", title="Alert 2"),
-        ...     position="top-end"
-        ... )
-
-    Note:
-        Position the container fixed on the page:
-        - top-start: Top left
-        - top-center: Top center
-        - top-end: Top right (default)
-        - middle-*: Vertically centered
-        - bottom-*: Bottom aligned
-    """
     # Build position classes
     classes = ["toast-container", "position-fixed", "p-3"]
 
-    # Map position to CSS classes
     position_map = {
         "top-start": "top-0 start-0",
         "top-center": "top-0 start-50 translate-middle-x",
@@ -192,7 +195,7 @@ def ToastContainer(
         "bottom-end": "bottom-0 end-0",
     }
 
-    classes.append(position_map[position])
+    classes.append(position_map.get(c_position, position_map["top-end"]))
 
     # Merge with user classes
     user_cls = kwargs.pop("cls", "")

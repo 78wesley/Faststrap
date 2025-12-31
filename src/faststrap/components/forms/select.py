@@ -1,14 +1,16 @@
 """Bootstrap Select component for dropdown selections."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import Div, Label, Option, Small
 from fasthtml.common import Select as FTSelect
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
+from ...core.types import SizeType
 from ...utils.attrs import convert_attrs
-
-SizeType = Literal["sm", "lg"]
 
 
 def Select(
@@ -17,95 +19,45 @@ def Select(
     label: str | None = None,
     help_text: str | None = None,
     size: SizeType | None = None,
-    disabled: bool = False,
-    required: bool = False,
-    multiple: bool = False,
+    disabled: bool | None = None,
+    required: bool | None = None,
+    multiple: bool | None = None,
     **kwargs: Any,
-) -> Div:  # Div | FTSelect
+) -> Div:
     """Bootstrap Select component for dropdown selections.
 
     Args:
         name: Select name attribute
         *options: Options as (value, label) or (value, label, selected)
-        label: Label text (if provided, wraps select in div)
+        label: Label text
         help_text: Helper text below select
         size: Select size (sm, lg)
         disabled: Whether select is disabled
         required: Whether select is required
         multiple: Allow multiple selections
         **kwargs: Additional HTML attributes (cls, id, hx-*, data-*, etc.)
-
-    Returns:
-        Div with label/select/help or just Select element
-
-    Example:
-        Simple select:
-        >>> Select(
-        ...     "country",
-        ...     ("us", "United States"),
-        ...     ("uk", "United Kingdom"),
-        ...     ("ca", "Canada")
-        ... )
-
-        With default selection:
-        >>> Select(
-        ...     "size",
-        ...     ("s", "Small"),
-        ...     ("m", "Medium", True),
-        ...     ("l", "Large"),
-        ...     label="Select Size",
-        ...     required=True
-        ... )
-
-        Multiple select:
-        >>> Select(
-        ...     "tags",
-        ...     ("python", "Python"),
-        ...     ("js", "JavaScript"),
-        ...     ("go", "Go"),
-        ...     ("rust", "Rust"),
-        ...     multiple=True,
-        ...     label="Choose Technologies",
-        ...     help_text="Hold Ctrl/Cmd to select multiple"
-        ... )
-
-        With HTMX:
-        >>> Select(
-        ...     "category",
-        ...     ("tech", "Technology"),
-        ...     ("health", "Health"),
-        ...     ("finance", "Finance"),
-        ...     label="Category",
-        ...     hx_get="/filter",
-        ...     hx_trigger="change",
-        ...     hx_target="#results"
-        ... )
-
-        Large size:
-        >>> Select(
-        ...     "priority",
-        ...     ("low", "Low"),
-        ...     ("medium", "Medium"),
-        ...     ("high", "High"),
-        ...     size="lg",
-        ...     label="Priority Level"
-        ... )
-
-    Note:
-        - Selected option marked with True in tuple
-        - Multiple mode allows Ctrl/Cmd+click selection
-        - Proper accessibility with label linkage
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/forms/select/
     """
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Select",
+        size=size,
+        disabled=disabled,
+        required=required,
+        multiple=multiple
+    )
+    
+    c_size = cfg.get("size")
+    c_disabled = cfg.get("disabled", False)
+    c_required = cfg.get("required", False)
+    c_multiple = cfg.get("multiple", False)
+
     # Ensure ID for label linkage
     select_id = kwargs.pop("id", name)
 
     # Build select classes
     classes = ["form-select"]
-    if size:
-        classes.append(f"form-select-{size}")
+    if c_size:
+        classes.append(f"form-select-{c_size}")
 
     user_cls = kwargs.pop("cls", "")
     cls = merge_classes(" ".join(classes), user_cls)
@@ -117,20 +69,18 @@ def Select(
         "id": select_id,
     }
 
-    if disabled:
+    if c_disabled:
         attrs["disabled"] = True
-
-    if required:
+    if c_required:
         attrs["required"] = True
-
-    if multiple:
+    if c_multiple:
         attrs["multiple"] = True
 
     # ARIA for help text
     if help_text:
         attrs["aria_describedby"] = f"{select_id}-help"
 
-    # Convert remaining kwargs (HTMX, data-*, etc.)
+    # Convert remaining kwargs
     attrs.update(convert_attrs(kwargs))
 
     # Process options
@@ -168,7 +118,7 @@ def Select(
             Label(
                 label,
                 " ",
-                Small("*", cls="text-danger") if required else "",
+                Small("*", cls="text-danger") if c_required else "",
                 **{"for": select_id},
                 cls="form-label",
             )

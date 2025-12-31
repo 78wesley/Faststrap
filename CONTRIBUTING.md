@@ -36,15 +36,27 @@ git push origin feature/my-component
 
 The easiest way to contribute! Pick from [ROADMAP.md](ROADMAP.md):
 
-**Priority Components (v0.3.0):**
-- Tabs
-- Dropdown
-- Input (text, email, password)
-- Select
-- Breadcrumb
-- Pagination
-- Spinner
-- Progress
+**Phase 4A Priority Components (v0.4.0):**
+- Table (+ THead, TBody, TRow, TCell)
+- Accordion (+ AccordionItem)
+- Checkbox
+- Radio
+- Switch
+- Range
+- ListGroup (+ ListGroupItem)
+- Collapse
+- InputGroup
+- FloatingLabel
+
+**Phase 4B Components (v0.4.5):**
+- FileInput
+- Tooltip
+- Popover
+- Figure
+- ConfirmDialog
+- EmptyState
+- StatCard
+- Hero
 
 **How to build:**
 1. Copy `src/faststrap/components/forms/button.py` as template
@@ -83,7 +95,7 @@ Look for files with <90% coverage and add tests.
 
 ### 4. Report Bugs
 
-Found a bug? [Open an issue](https://github.com/Evayoung/Faststrap/issues/new) with:
+Found a bug? [Open an issue](https://github.com/Faststrap-org/Faststrap/issues/new) with:
 
 - FastStrap version (`pip show faststrap`)
 - FastHTML version
@@ -93,7 +105,7 @@ Found a bug? [Open an issue](https://github.com/Evayoung/Faststrap/issues/new) w
 
 ### 5. Suggest Features
 
-Have an idea? [Start a discussion](https://github.com/Evayoung/Faststrap/discussions/new)!
+Have an idea? [Start a discussion](https://github.com/Faststrap-org/Faststrap/discussions/new)!
 
 ---
 
@@ -103,11 +115,11 @@ Have an idea? [Start a discussion](https://github.com/Evayoung/Faststrap/discuss
 
 ```bash
 # Clone your fork
-git clone https://github.com/Evayoung/Faststrap.git
+git clone https://github.com/Faststrap-org/Faststrap.git
 cd Faststrap
 
 # Add upstream remote
-git remote add upstream https://github.com/Evayoung/Faststrap.git
+git remote add upstream https://github.com/Faststrap-org/Faststrap.git
 
 # Create virtual environment
 python -m venv .venv

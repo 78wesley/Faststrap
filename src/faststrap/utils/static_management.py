@@ -64,11 +64,22 @@ def get_static_path() -> Path:
 
 def is_mounted(app: Any, path: str) -> bool:
     """Robust check whether a route path is already mounted."""
-    for route in getattr(app, "routes", []):
-        # Cleaner and safer attribute check (as ChatGPT recommended)
-        route_path = getattr(route, "path", None) or getattr(route, "prefix", None)
-        if route_path and route_path.rstrip("/") == path.rstrip("/"):
-            return True
+    # Ensure path starts with / and is normalized
+    if not path.startswith("/"):
+        path = f"/{path}"
+    target = path.rstrip("/") or "/"
+
+    routes = getattr(app, "routes", [])
+    for route in routes:
+        # Starlette Route/Mount objects usually have a 'path' attribute
+        # We also check 'path_format' as a fallback used in some versions/middleware
+        for attr in ("path", "path_format"):
+            r_path = getattr(route, attr, None)
+            if isinstance(r_path, str):
+                normalized = r_path.rstrip("/") or "/"
+                if normalized == target:
+                    return True
+                    
     return False
 
 
@@ -165,7 +176,7 @@ def get_default_favicon_url(use_cdn: bool, static_url: str) -> str:
     """Get the default FastStrap favicon URL."""
     if use_cdn:
         return (
-            "https://cdn.jsdelivr.net/gh/Evayoung/Faststrap@main/src/faststrap/static/favicon.svg"
+            "https://cdn.jsdelivr.net/gh/Faststrap-org/Faststrap@main/src/faststrap/static/favicon.svg"
         )
     else:
         return f"{static_url.rstrip('/')}/favicon.svg"

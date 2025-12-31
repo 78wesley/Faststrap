@@ -1,116 +1,93 @@
 """Bootstrap Navbar component for site navigation."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import A, Button, Div, Nav, Span
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
+from ...core.types import ExpandType
 from ...utils.attrs import convert_attrs
-
-VariantType = Literal["light", "dark"]
-ExpandType = Literal["sm", "md", "lg", "xl", "xxl"]
 
 
 def Navbar(
     *children: Any,
+    items: list[Any] | None = None,
     brand: Any | None = None,
     brand_href: str = "/",
-    variant: VariantType | None = None,
+    variant: str | None = None,
+    color_scheme: str | None = None,
     bg: str | None = None,
-    expand: ExpandType | None = "lg",
-    sticky: Literal["top", "bottom"] | None = None,
-    fixed: Literal["top", "bottom"] | None = None,
-    container: bool | Literal["sm", "md", "lg", "xl", "xxl"] = True,
+    expand: ExpandType | None = None,
+    sticky: str | None = None,
+    fixed: str | None = None,
+    container: bool | str = True,
     **kwargs: Any,
 ) -> Nav:
     """Bootstrap Navbar component for responsive site navigation.
 
     Args:
-        *children: Navbar content (nav items, forms, text, etc.)
-        brand: Brand text or logo (appears on left)
+        *children: Navbar content
+        items: Navbar items list (links, buttons, etc.)
+        brand: Brand text or logo
         brand_href: Brand link URL (default: "/")
-        variant: Color scheme (light or dark text)
-        bg: Background color class (e.g., "primary", "dark", "light")
-        expand: Breakpoint where navbar expands (default: "lg")
-        sticky: Stick to top or bottom on scroll
+        variant: Color scheme alias (light or dark text)
+        color_scheme: Color scheme (light or dark text)
+        bg: Background color class
+        expand: Breakpoint where navbar expands
+        sticky: Stick to top or bottom
         fixed: Fix to top or bottom
-        container: Wrap in container (True, False, or breakpoint like "lg")
-        **kwargs: Additional HTML attributes (cls, hx-*, data-*, etc.)
-
-    Returns:
-        FastHTML Nav element with navbar structure
-
-    Example:
-        Basic navbar:
-        >>> Navbar(
-        ...     A("Home", href="/", cls="nav-link"),
-        ...     A("About", href="/about", cls="nav-link"),
-        ...     brand="MyApp"
-        ... )
-
-        Dark navbar with background:
-        >>> Navbar(
-        ...     A("Products", href="/products", cls="nav-link"),
-        ...     A("Contact", href="/contact", cls="nav-link"),
-        ...     brand="Store",
-        ...     variant="dark",
-        ...     bg="primary"
-        ... )
-
-        Sticky navbar:
-        >>> Navbar(
-        ...     NavItems(...),
-        ...     brand="Site",
-        ...     sticky="top"
-        ... )
-
-        Custom expand breakpoint:
-        >>> Navbar(
-        ...     Menu items,
-        ...     brand="Mobile App",
-        ...     expand="md"  # Expands on tablets+
-        ... )
-
-    Note:
-        For complex navbars with dropdowns, forms, or buttons,
-        wrap items in appropriate containers:
-
-        >>> Navbar(
-        ...     Div(  # Nav items
-        ...         A("Link 1", href="/", cls="nav-link"),
-        ...         A("Link 2", href="/about", cls="nav-link"),
-        ...         cls="navbar-nav"
-        ...     ),
-        ...     Div(  # Right-aligned form
-        ...         Input(type="search", cls="form-control", placeholder="Search"),
-        ...         cls="d-flex"
-        ...     ),
-        ...     brand="App"
-        ... )
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/navbar/
+        container: Wrap in container
+        **kwargs: Additional HTML attributes
     """
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Navbar",
+        variant=variant,
+        color_scheme=color_scheme,
+        bg=bg,
+        expand=expand,
+        sticky=sticky,
+        fixed=fixed,
+        container=container
+    )
+    
+    # Use color_scheme (with variant as fallback)
+    # Priority: 1. explicit color_scheme, 2. explicit variant, 3. global default
+    c_scheme = color_scheme or variant or cfg.get("color_scheme") or cfg.get("variant", "light")
+    
+    c_bg = cfg.get("bg")
+    c_expand = expand if expand is not None else cfg.get("expand", "lg")
+    c_sticky = cfg.get("sticky")
+    c_fixed = cfg.get("fixed")
+    c_container = cfg.get("container", True)
+
     # Build navbar classes
     classes = ["navbar"]
 
     # Add expand class
-    if expand:
-        classes.append(f"navbar-expand-{expand}")
+    if c_expand is True:
+        classes.append("navbar-expand")
+    elif isinstance(c_expand, str) and c_expand not in ("never", "false"):
+        if c_expand == "always":
+            classes.append("navbar-expand")
+        else:
+            classes.append(f"navbar-expand-{c_expand}")
 
-    # Add variant
-    if variant:
-        classes.append(f"navbar-{variant}")
+    # Add variant/color-scheme
+    classes.append(f"navbar-{c_scheme}")
 
     # Add background
-    if bg:
-        classes.append(f"bg-{bg}")
+    if c_bg:
+        classes.append(f"bg-{c_bg}")
 
     # Add sticky/fixed positioning
-    if sticky:
-        classes.append(f"sticky-{sticky}")
-    elif fixed:
-        classes.append(f"fixed-{fixed}")
+    if c_sticky:
+        classes.append(f"sticky-{c_sticky}")
+    elif c_fixed:
+        classes.append(f"fixed-{c_fixed}")
 
     # Merge with user classes
     user_cls = kwargs.pop("cls", "")
@@ -122,10 +99,15 @@ def Navbar(
 
     # Build navbar content
     parts = []
+    
+    # Merge *children and items
+    nav_content = list(children)
+    if items:
+        nav_content.extend(items)
 
     # Wrap in container if requested
-    if container:
-        container_cls = "container" if container is True else f"container-{container}"
+    if c_container:
+        container_cls = "container" if c_container is True else f"container-{c_container}"
 
         # Build container content
         container_parts = []
@@ -136,12 +118,10 @@ def Navbar(
             container_parts.append(brand_elem)
 
         # Toggler for mobile (collapse button)
-        if expand:
+        if c_expand:
             toggler_id = kwargs.get("id", "navbarContent")
             if "id" not in kwargs:
-                # Generate a unique ID for the collapse target
                 import random
-
                 toggler_id = f"navbar{random.randint(1000, 9999)}"
 
             toggler = Button(
@@ -157,11 +137,11 @@ def Navbar(
             container_parts.append(toggler)
 
             # Collapsible content
-            collapse = Div(*children, cls="collapse navbar-collapse", id=toggler_id)
+            collapse = Div(*nav_content, cls="collapse navbar-collapse", id=toggler_id)
             container_parts.append(collapse)
         else:
             # No collapse, just add children directly
-            container_parts.extend(children)
+            container_parts.extend(nav_content)
 
         parts.append(Div(*container_parts, cls=container_cls))
     else:
@@ -169,12 +149,11 @@ def Navbar(
         if brand:
             parts.append(A(brand, cls="navbar-brand", href=brand_href))
 
-        if expand:
+        if c_expand:
             # Still need collapse for mobile
             toggler_id = kwargs.get("id", "navbarContent")
             if "id" not in kwargs:
                 import random
-
                 toggler_id = f"navbar{random.randint(1000, 9999)}"
 
             toggler = Button(
@@ -189,9 +168,9 @@ def Navbar(
             )
             parts.append(toggler)
 
-            collapse = Div(*children, cls="collapse navbar-collapse", id=toggler_id)
+            collapse = Div(*nav_content, cls="collapse navbar-collapse", id=toggler_id)
             parts.append(collapse)
         else:
-            parts.extend(children)
+            parts.extend(nav_content)
 
     return Nav(*parts, **attrs)

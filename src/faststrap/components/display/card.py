@@ -5,7 +5,9 @@ from typing import Any
 from fasthtml.common import H5, Div, Img
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
 from ...utils.attrs import convert_attrs
+
 
 
 def Card(
@@ -17,6 +19,12 @@ def Card(
     img_top: str | None = None,
     img_bottom: str | None = None,
     img_overlay: bool = False,
+    header_cls: str | None = None,
+    body_cls: str | None = None,
+    footer_cls: str | None = None,
+    title_cls: str | None = None,
+    subtitle_cls: str | None = None,
+    text_cls: str | None = None,
     **kwargs: Any,
 ) -> Div:
     """Bootstrap Card component for flexible content containers.
@@ -46,37 +54,41 @@ def Card(
         ...     header="Featured",
         ...     footer="Last updated 3 mins ago"
         ... )
-
-        With image:
-        >>> Card(
-        ...     "Beautiful landscape description",
-        ...     title="Mountain View",
-        ...     img_top="mountain.jpg"
-        ... )
-
-        Image overlay:
-        >>> Card(
-        ...     "Overlay text",
-        ...     title="Title on Image",
-        ...     img_top="bg.jpg",
-        ...     img_overlay=True
-        ... )
-
-        With HTMX:
-        >>> Card(
-        ...     "Click to load more",
-        ...     title="Dynamic Card",
-        ...     hx_get="/more",
-        ...     hx_trigger="click"
-        ... )
-
-    Note:
-        Cards are flexible containers with minimal required markup.
-        Use the grid system for layouts with multiple cards.
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/card/
     """
+    # Resolve defaults
+    cfg = resolve_defaults(
+        "Card",
+        title=title,
+        subtitle=subtitle,
+        header=header,
+        footer=footer,
+        img_top=img_top,
+        img_bottom=img_bottom,
+        img_overlay=img_overlay,
+        header_cls=header_cls,
+        body_cls=body_cls,
+        footer_cls=footer_cls,
+        title_cls=title_cls,
+        subtitle_cls=subtitle_cls,
+        text_cls=text_cls
+    )
+    
+    c_title = cfg.get("title")
+    c_subtitle = cfg.get("subtitle")
+    c_header = cfg.get("header")
+    c_footer = cfg.get("footer")
+    c_img_top = cfg.get("img_top")
+    c_img_bottom = cfg.get("img_bottom")
+    c_img_overlay = cfg.get("img_overlay", False)
+    
+    # CSS classes (fallback to empty string if None)
+    c_header_cls = cfg.get("header_cls") or ""
+    c_body_cls = cfg.get("body_cls") or ""
+    c_footer_cls = cfg.get("footer_cls") or ""
+    c_title_cls = cfg.get("title_cls") or ""
+    c_subtitle_cls = cfg.get("subtitle_cls") or ""
+    c_text_cls = cfg.get("text_cls") or ""
+
     # Build base classes
     classes = ["card"]
 
@@ -92,49 +104,52 @@ def Card(
     parts = []
 
     # Add header if provided
-    if header:
-        parts.append(Div(header, cls="card-header"))
+    if c_header:
+        parts.append(Div(c_header, cls=merge_classes("card-header", c_header_cls)))
 
     # Add top image
-    if img_top and not img_overlay:
-        parts.append(Img(src=img_top, cls="card-img-top", alt=""))
+    if c_img_top and not c_img_overlay:
+        parts.append(Img(src=c_img_top, cls="card-img-top", alt=""))
 
     # Build body content
     body_content = []
 
     # Add image for overlay mode
-    if img_overlay and img_top:
-        parts.append(Img(src=img_top, cls="card-img", alt=""))
-        body_cls = "card-img-overlay"
+    if c_img_overlay and c_img_top:
+        parts.append(Img(src=c_img_top, cls="card-img", alt=""))
+        actual_body_cls = "card-img-overlay"
     else:
-        body_cls = "card-body"
+        actual_body_cls = "card-body"
 
     # Add title
-    if title:
-        body_content.append(H5(title, cls="card-title"))
+    if c_title:
+        body_content.append(H5(c_title, cls=merge_classes("card-title", c_title_cls)))
 
     # Add subtitle
-    if subtitle:
-        body_content.append(Div(subtitle, cls="card-subtitle mb-2 text-muted"))
+    if c_subtitle:
+        body_content.append(
+            Div(c_subtitle, cls=merge_classes("card-subtitle mb-2 text-muted", c_subtitle_cls))
+        )
 
     # Add main content
     if children:
         # If there's a title/subtitle, wrap content in P for better semantics
-        if title or subtitle:
-            body_content.append(Div(*children, cls="card-text"))
+        if c_title or c_subtitle:
+            body_content.append(Div(*children, cls=merge_classes("card-text", c_text_cls)))
         else:
             body_content.extend(children)
 
     # Add body
     if body_content:
-        parts.append(Div(*body_content, cls=body_cls))
+        parts.append(Div(*body_content, cls=merge_classes(actual_body_cls, c_body_cls)))
 
     # Add bottom image
-    if img_bottom and not img_overlay:
-        parts.append(Img(src=img_bottom, cls="card-img-bottom", alt=""))
+    if c_img_bottom and not c_img_overlay:
+        parts.append(Img(src=c_img_bottom, cls="card-img-bottom", alt=""))
 
     # Add footer
-    if footer:
-        parts.append(Div(footer, cls="card-footer text-muted"))
+    if c_footer:
+        parts.append(Div(c_footer, cls=merge_classes("card-footer text-muted", c_footer_cls)))
 
     return Div(*parts, **attrs)
+

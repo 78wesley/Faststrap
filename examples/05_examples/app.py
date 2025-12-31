@@ -46,7 +46,7 @@ def home():
                 A("Components", href="#components", cls="nav-link"),
                 A(
                     "GitHub",
-                    href="https://github.com/Evayoung/Faststrap",
+                    href="https://github.com/Faststrap-org/Faststrap",
                     cls="nav-link",
                     target="_blank",
                 ),

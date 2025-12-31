@@ -294,7 +294,7 @@ def footer_content() -> Div:
                 "Built with ",
                 A(
                     "FastStrap",
-                    href="https://github.com/Evayoung/Faststrap",
+                    href="https://github.com/Faststrap-org/Faststrap",
                     target="_blank",
                     cls="text-accent",
                 ),

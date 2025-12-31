@@ -1,29 +1,23 @@
 """Bootstrap Alert component for contextual feedback messages."""
 
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import Any
 
 from fasthtml.common import Button, Div, Span
 
 from ...core.base import merge_classes
+from ...core.theme import resolve_defaults
+from ...core.types import VariantType
 from ...utils.attrs import convert_attrs
-
-VariantType = Literal[
-    "primary",
-    "secondary",
-    "success",
-    "danger",
-    "warning",
-    "info",
-    "light",
-    "dark",
-]
 
 
 def Alert(
     *children: Any,
-    variant: VariantType = "primary",
-    dismissible: bool = False,
-    heading: str | None = None,
+    variant: VariantType | None = None,
+    dismissible: bool | None = None,
+    heading: Any | None = None,
+    heading_cls: str | None = None,
     **kwargs: Any,
 ) -> Div:
     """Bootstrap Alert component for contextual feedback messages.
@@ -32,50 +26,30 @@ def Alert(
         *children: Alert content
         variant: Bootstrap color variant
         dismissible: Add close button to dismiss alert
-        heading: Optional heading text (styled with alert-heading)
+        heading: Optional heading text or element
+        heading_cls: CSS class for heading
         **kwargs: Additional HTML attributes (cls, id, hx-*, data-*, etc.)
 
     Returns:
         FastHTML Div element with alert classes
-
-    Example:
-        Basic usage:
-        >>> Alert("Operation successful!", variant="success")
-
-        With heading:
-        >>> Alert(
-        ...     "Check your inbox for confirmation.",
-        ...     variant="info",
-        ...     heading="Email Sent"
-        ... )
-
-        Dismissible:
-        >>> Alert(
-        ...     "This alert can be closed.",
-        ...     variant="warning",
-        ...     dismissible=True
-        ... )
-
-        With HTMX:
-        >>> Alert(
-        ...     "Loading...",
-        ...     variant="info",
-        ...     hx_get="/status",
-        ...     hx_trigger="load"
-        ... )
-
-    Note:
-        Dismissible alerts require Bootstrap's JavaScript.
-        The alert will fade out when the close button is clicked.
-
-    See Also:
-        Bootstrap docs: https://getbootstrap.com/docs/5.3/components/alerts/
     """
+    # Resolve API defaults
+    cfg = resolve_defaults(
+        "Alert",
+        variant=variant,
+        dismissible=dismissible,
+        heading_cls=heading_cls
+    )
+    
+    c_variant = cfg.get("variant", "primary")
+    c_dismissible = cfg.get("dismissible", False)
+    c_heading_cls = cfg.get("heading_cls", "alert-heading h4")
+
     # Build base classes
-    classes = ["alert", f"alert-{variant}"]
+    classes = ["alert", f"alert-{c_variant}"]
 
     # Add dismissible class if needed
-    if dismissible:
+    if c_dismissible:
         classes.append("alert-dismissible fade show")
 
     # Merge with user classes
@@ -93,13 +67,16 @@ def Alert(
 
     # Add heading if provided
     if heading:
-        content.append(Div(heading, cls="alert-heading h4"))
+        if isinstance(heading, (str, bytes)):
+            content.append(Div(heading, cls=c_heading_cls))
+        else:
+            content.append(heading)
 
     # Add main content
     content.extend(children)
 
     # Add close button if dismissible
-    if dismissible:
+    if c_dismissible:
         close_btn = Button(
             Span("×", aria_hidden="true"),
             type="button",

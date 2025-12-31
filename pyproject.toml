@@ -50,11 +50,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Evayoung/Faststrap"
-Repository = "https://github.com/Evayoung/Faststrap"
-Issues = "https://github.com/Evayoung/Faststrap/issues"
-Documentation = "https://github.com/Evayoung/Faststrap#readme"
-Changelog = "https://github.com/Evayoung/Faststrap/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Faststrap-org/Faststrap"
+Repository = "https://github.com/Faststrap-org/Faststrap"
+Issues = "https://github.com/Faststrap-org/Faststrap/issues"
+Documentation = "https://github.com/Faststrap-org/Faststrap#readme"
+Changelog = "https://github.com/Faststrap-org/Faststrap/blob/main/CHANGELOG.md"
 
 # ============================================================================
 # Build Configuration

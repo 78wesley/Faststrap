@@ -50,7 +50,7 @@ custom_css = """
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-"""
+""" 
 hrds = (
     Style(custom_css),
     # Link(rel="", href=""), add more custom head elements if needed
@@ -236,7 +236,7 @@ def landing():
                     ),
                     Div(
                         Icon("github", cls="text-primary fs-2 mb-2"),
-                        P("github.com/Evayoung", cls="fw-bold"),
+                        P("github.com/Faststrap-org", cls="fw-bold"),
                         cls="text-center col-md-4 mb-4",
                     ),
                     cls="row justify-content-center",
